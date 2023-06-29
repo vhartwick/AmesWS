@@ -1,0 +1,127 @@
+.Select-control {
+    background-color: #252930 !important;
+    color:white;
+  }
+
+.Select-menu-outer {
+    background-color: #252930;
+    color: white;
+}
+
+.Select-value-label {
+    color: white !important;
+}
+
+.body {
+    background-color: #252930 !important;
+}
+
+
+.my-accordion .accordion-button {
+    background-color: #252930 !important;
+    color: white;
+}
+
+.my-accordion .accordion-button:not(.collapsed) {
+    background-color: #252930;
+    color:white;
+}
+
+.my-accordion .accordion-body {
+   background-color: #252930 !important;
+   color:white;
+}
+
+.my-accordion .card-body {
+   background-color: #252930 !important;
+   color:white;
+}
+
+.header {
+   position: fixed;
+   top: 0;
+   left: 0vw;
+   right: 0vw;
+   bottom: 0;
+   padding: 1vw;
+   background-color:#252930;
+}
+
+.sidebar_vlh {
+   position: fixed;
+   top:25vh;
+   width: 330px;
+   bottom: 0vh;
+   padding: 10px 20px;
+   overflow-y:scroll;
+   color:white;
+   background-color:#252930;
+}
+
+.action_bar {
+   position: fixed;
+   top:25vh;
+   left:82vw;
+   bottom: 0vh;
+   padding: 10px 20px 10px 20px;  
+   right: 10px;
+   background-color:#252930;
+   color:white;
+   overflow-y:scroll;
+}
+
+.graph_window {
+   position: fixed;
+   top:25vh;
+   left:330px;
+   right:18vw;
+   bottom: 10vh;
+   #bottom: 23vh;
+   overflow-y:scroll;
+   color:white;
+   background-color:#252930;
+   z-index:1;
+}
+
+.title_box {
+   position: fixed;
+   top:25vh;
+   left: 330px;
+   width:42vw;
+   height:4vh;
+   color:#808ef2;
+   background-color:#252930;
+   z-index:2;
+   text-align:center;
+   border:none;
+}
+
+.main_figure {
+   position: absolute;
+   top:5vh;
+#   left:330px;
+#   right:18vw;
+    width:55vw;
+    height:60vh;
+#   bottom: vh;
+   color:white;
+   background-color:#252930;
+   z-index:1;
+}
+
+
+  
+.vertical_profile {
+   position: absolute;
+   top:0vh;
+   #right:2vw;
+   left:42vw;
+   width:15vw;
+   height:65vh;
+   #height:48vh;
+   color:white;
+   #background-color:rgba(0, 0, 0, 0); /* Set the background color to transparent */
+   #background-color:#252930;
+   z-index:2;
+   #visibility: hidden;
+} 
