@@ -13,9 +13,10 @@ Download Instructions:
         conda env create -f environment.yml --name amesWS-env
 
 3. Add one thing to env
-	
-	pip install importlib-metadata==4.13.0
 
+```	
+	pip install importlib-metadata==4.13.0
+```     
 4. Change the File Paths to Your Data
 
 	vi utils/common_functions.py 
