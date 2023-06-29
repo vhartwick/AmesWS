@@ -12,12 +12,16 @@ Download Instructions:
         cd /PATH/TO/DIRECTORY/amesWS
         conda env create -f environment.yml --name amesWS-env
 ```
-3. Add one thing to env
 
+3. Activate Virtual Environment
+```     
+	conda activate amesWS-env
+```
+4. Add one thing to env
 ```	
 	pip install importlib-metadata==4.13.0
 ```     
-4. Change the File Paths to Your Data
+5. Change the File Paths to Your Data
 ```
 	vi utils/common_functions.py 
         **change all file paths in def file_path (right now you only need to worry about the one copied below)
@@ -25,16 +29,12 @@ Download Instructions:
 	if vcords_input == "pstd" : # load atmos_average_pstd
        		f_path = '/PATH/TO/DATA/amesWS/Data/00668.atmos_average_pstd.nc'
 ```
-5. Activate Virtual Environment
-```     
-	conda activate amesWS-env
-```
-5. Run App
+6. Run App
 ```  	
 	python app.py
 ```
 
-6. Go to Web Server: When the app is running, it will return the following text. Copy the http web address and 
+7. Go to Web Server: When the app is running, it will return the following text. Copy the http web address and 
    go to that site address.
 
 ```	
