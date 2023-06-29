@@ -204,7 +204,6 @@ def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo
 
       #PNG
       if output_format_input[0] == "png":
-         print('in png')
          fig = go.Figure(fig_input)
          # Set the title of the figure
          fig.update_layout(

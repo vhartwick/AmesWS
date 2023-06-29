@@ -73,8 +73,6 @@ def fig_title(fig,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_in
        elif user_input == 'ALL':
           text += [text_options[dim_index][0]]
 
-          print('update_plot_title: text', text)
- 
     # order options (average first, if more than one average combine)
     #e.g. Global Diurnal Average @ X Pa
     text = sorted(text, key=lambda x: 'Average' in x, reverse=True)
@@ -82,7 +80,6 @@ def fig_title(fig,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_in
     
     # Join the strings into a single text string
     text = ' '.join(text)
-    print('text2',text)
 
     # If both "Meridional Average" and "Zonal Average" appear, replace with "Global"
     if "Meridional Average" and "Zonal Average" in text:
