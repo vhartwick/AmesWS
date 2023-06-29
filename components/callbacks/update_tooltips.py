@@ -26,7 +26,6 @@ def update_tooltips(plot_input):
     dimx = dv.loc[(dv['plot-type']==plot_input),'dimx'].values[0]
     dimy = dv.loc[(dv['plot-type']==plot_input),'dimy'].values[0]
     
-    print('tooltip: dimx',dimx)  
     # Define a dictionary with dyanmic values 
     output_dict = {}
     options = ['lat','lon','time','time_of_day_12','lev']
@@ -49,7 +48,6 @@ def update_tooltips(plot_input):
            output_dict['lev3'] = 'Choose a single value "X", a range of values "X,Y" or to see average over the entire range "ALL"'
 
     # Return the dictionary values as strings
-    print([str(output_dict.get(key, "")) for key in options + ['lev2', 'lev3']])
     return [str(output_dict.get(key, "")) for key in options + ['lev2', 'lev3']]
     
 
