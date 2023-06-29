@@ -1,0 +1,7 @@
+Data/**.nc
+Data/00668.atmos_average_zagl.nc 
+Data/00668.atmos_average_pstd.nc
+**/__pycache__
+**/*.sav
+**/downloads/*
+**/images/*
