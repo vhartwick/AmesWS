@@ -5,7 +5,7 @@
 Download Instructions:
 1. Download AmesWS Code from Github
 ```
-        pip install git+https://github.com/vhartwick/AmesWS.git
+        git clone git+https://github.com/vhartwick/AmesWS.git
 ```
 2. Go into Program Directory & Create a Virtual Environment
 ``` 
