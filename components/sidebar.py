@@ -73,15 +73,18 @@ def Sidebar():
                  dcc.Input(id="lon-input",value='ALL', type='text'),
                  html.P("Longitude",id="lon-input-txt"),
                  dbc.Tooltip(target="lon-input-txt",id="lon-tooltip"),
-
+                 dbc.Alert(id='lon-alert', color='danger', dismissable=True, is_open=False),
+                 
                  dcc.Input(id="solar-longitude-input",value='ALL', type='text'),
                  html.P("Solar Longitude (Ls)",id="time-input-txt"),
                  dbc.Tooltip(target="time-input-txt",id="time-tooltip"),
+                 dbc.Alert(id='ls-alert', color='danger', dismissable=True, is_open=False),
                  
                  dcc.Input(id="tod-input",value='ALL', type='text'),
                  html.P("Local Time",id="tod-input-txt"),
                  dbc.Tooltip(target="tod-input-txt",id="tod-tooltip"),
-             
+                 dbc.Alert(id='tod-alert', color='danger', dismissable=True, is_open=False),
+
                  dcc.Input(id="lev-input",value='100', type='text',
                      style={"display":"none"}),
                  html.P("Atmospheric Level", id='lev-input-txt',
@@ -125,6 +128,10 @@ def Sidebar():
                  dcc.Input(id="clev-input",value='ALL', type='text'),
                  html.P(html.Span("Contour Range",id="clev-input-txt")),
                  dbc.Tooltip('Specify the desired range of contours "#,#"',target="clev-input-txt",id="clev-tooltip"),
+
+                 dbc.Alert(id='clev-alert', color='danger', dismissable=True, is_open=False),
+
+
               ], title="Plotting Style Options"),
            ],start_collapsed=True, id="plotting-accordian",className="my-accordion"),
        ]),
