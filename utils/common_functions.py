@@ -17,29 +17,29 @@ def fv3_data():
    return df
 
 
-def file_path(tod_input,vcords_input):
+def file_path(model_input,tod_input,vcords_input):
   if tod_input != 'ALL':  # load atmos_diurn
      if vcords_input == "pstd" : # load atmos_average_pstd
-       f_path = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_diurn_T_pstd.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/{model_input}/Data/00668.atmos_diurn_T_pstd.nc'
      elif vcords_input == "zagl":  # load atmos_average_zagl
-       f_path = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_diurn_T_zagl.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_diurn_T_zagl.nc'
      else:  # load atmos_average_zstd
-       f_path = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_diurn_T_zstd.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_diurn_T_zstd.nc'
 
   else: # load atmos_average
      if vcords_input == "pstd" : # load atmos_average_pstd
-       f_path = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_average_pstd.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_average_pstd.nc'
      elif vcords_input == "zagl":  # load atmos_average_zagl
-       f_path = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_average_zagl.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_average_zagl.nc'
      else:  # load atmos_average_zstd
-       f_path = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_average_zstd.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_average_zstd.nc'
   
   return f_path
 
-def load_dims(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
+def load_dims(model_input,plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
   # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(tod_input,vcords_input)
+  f_path = file_path(model_input,tod_input,vcords_input)
 
   # LOAD DATA
   # order : plot_input, array dimensions, specified lat,lon,lev,areo
@@ -59,10 +59,10 @@ def load_dims(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,l
      # return the loaded variables in the specified format
      return json.dumps(dim1.to_dict()), json.dumps(dim2.to_dict()), json.dumps(time_dim.to_dict()), json.dumps(vert_dim.to_dict())
 
-def load_data(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
+def load_data(model_input,plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
   # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(tod_input,vcords_input)
+  f_path = file_path(model_input,tod_input,vcords_input)
 
   # LOAD DATA
   # order : plot_input, array dimensions, specified lat,lon,lev,areo
@@ -495,28 +495,3 @@ def define_1D_col(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcord
     return var
 
 
-
-def load_data(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
-
-  # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(tod_input,vcords_input)
-
-  # LOAD DATA
-  # order : plot_input, array dimensions, specified lat,lon,lev,areo
-
-  # reset saved variables
-  var = []
-
-  with xr.open_dataset(f_path,decode_times=False) as f:
-     # REPLACE TIME COORD WITH AREO
-     areo_coord = np.array(f.areo[:,0]%360)
-     f.coords['time'] = areo_coord
-
-     # DEFINE VARIBLES
-     if "1D" in str(plot_input):
-        var = define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_input,tod_input)
-     else:
-        var = define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_input,tod_input)
-
-     # return the loaded variables in the specified format
-     return json.dumps(var.to_dict())

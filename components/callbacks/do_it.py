@@ -33,7 +33,8 @@ dp = df.plotting_options()
     #Output("time-var-sav","data"),
     #Output("vert-var-sav","data")],
     Input("btn-doit-txt","n_clicks"),
-    [State("plot-type-dropdown", "value"),
+    [State("model-dropdown", "value"),
+    State("plot-type-dropdown", "value"),
     State("variable1-dropdown", "value"),
     State("variable2-dropdown", "value"),
     State("variable3-dropdown", "value"),
@@ -51,75 +52,25 @@ dp = df.plotting_options()
     prevent_initial_call=True,
 )
 
-def do_it(btn_clicks,plot_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,lev2_input,lev3_input,tod_input,cmap_input,clev_input,plot_title_input):
+def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,lev2_input,lev3_input,tod_input,cmap_input,clev_input,plot_title_input):
     
     # initialize variables
     var1, var2, var3 = None, None, None
 
     # Load data conditionally (based on 1D or 2D plot_input)
-    dim1, dim2, time_dim, vert_dim = cf.load_dims(plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
+    dim1, dim2, time_dim, vert_dim = cf.load_dims(model_input,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
 
-    var1 = cf.load_data(plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
+    var1 = cf.load_data(model_input,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
 
     if str(var2_input) != "None":
-       var2 = cf.load_data(plot_input,var2_input,vcords_input,areo_input,lat_input,lon_input,lev2_input,tod_input)
+       var2 = cf.load_data(model_input,plot_input,var2_input,vcords_input,areo_input,lat_input,lon_input,lev2_input,tod_input)
 
     if str(var3_input) != "None":
-       var3 = cf.load_data(plot_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev3_input,tod_input)
+       var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev3_input,tod_input)
     
     fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input)  
     return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3
 
-
-# LOAD DIMS
-def load_dims(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
-
-  # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = cf.file_path(tod_input,vcords_input)
-
-  # LOAD DATA
-  # order : plot_input, array dimensions, specified lat,lon,lev,areo
-
-  # reset saved variables
-  dim1,dim2,time_dim,vert_dim = None,None,None,None
-
-  with xr.open_dataset(f_path,decode_times=False) as f:
-     
-     # REPLACE TIME COORD WITH AREO
-     areo_coord = np.array(f.areo[:,0]%360)
-     f.coords['time'] = areo_coord
-
-     # DEFINE DIMENSIONS & VARIBLES
-     dim1,dim2,time_dim,vert_dim = cf.define_dims(f,dv,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_input,tod_input)
-
-     # return the loaded variables in the specified format
-     return json.dumps(dim1.to_dict()), json.dumps(dim2.to_dict()), json.dumps(time_dim.to_dict()), json.dumps(vert_dim.to_dict())
-
-# FIND FILE & LOAD DATA
-def load_data(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
-
-  # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = cf.file_path(tod_input,vcords_input) 
-
-  # LOAD DATA
-  # order : plot_input, array dimensions, specified lat,lon,lev,areo   
-
-  # reset saved variables
-  var = []
-  
-  with xr.open_dataset(f_path,decode_times=False) as f:   
-     # REPLACE TIME COORD WITH AREO
-     areo_coord = np.array(f.areo[:,0]%360)
-     f.coords['time'] = areo_coord
-
-     # DEFINE VARIBLES
-     if "1D" in str(plot_input):
-        var = cf.define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_input,tod_input)
-     else:
-        var = cf.define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_input,tod_input)
-    
-     # return the loaded variables in the specified format
-     return json.dumps(var.to_dict())
 
 def blank_fig():
     fig = go.Figure(go.Scatter(x=[], y = []))
@@ -221,6 +172,7 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
        xaxis_column_name = dv.loc[(dv['plot-type']==plot_input),'xaxis_name'].values[0]
        yaxis_column_name = dv.loc[(dv['plot-type']==plot_input),'yaxis_name'].values[0]
 
+       
        xrange,xtick = dp.loc[(dp['dim']==dim1.name),'range'].values[0],dp.loc[(dp['dim']==dim1.name),'tick'].values[0]
        
        yrange,ytick = dp.loc[(dp['dim']==dim2.name),'range'].values[0],dp.loc[(dp['dim']==dim2.name),'tick'].values[0]

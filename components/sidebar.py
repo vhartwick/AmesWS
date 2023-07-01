@@ -7,7 +7,15 @@ import dash_bootstrap_components as dbc
 def Sidebar():
 
    layout = html.Div([
-     
+    
+        html.Div(["Model Scenario",
+           dcc.Dropdown(id="model-dropdown",
+              options = [
+                 {'label': 'Background Dust Climatology', 'value':'sim1'},
+               ],
+               style={"backgroundColor":"#252930"}, value='sim1'),
+        ]),
+ 
         html.Div([
            "Plot Selection",
            dcc.Dropdown(id="plot-type-dropdown",
