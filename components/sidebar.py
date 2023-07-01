@@ -99,18 +99,6 @@ def Sidebar():
                      style={"display":"none"}),
                  dbc.Tooltip(target="lev-input-txt",id='lev-tooltip'),
 
-                 dcc.Input(id="lev2-input",value='100', type='text',
-                      style={"display":"none"}),
-                 html.P("Atmospheric Level for Second Variable", id='lev2-input-txt',
-                     style={"display":"none"}),
-                 dbc.Tooltip({},target="lev2-input-txt",id='lev2-tooltip'),
-
-                 dcc.Input(id="lev3-input",value='100', type='text',
-                      style={"display":"none"}),
-                 html.P("Atmospheric Level for Third Variable", id='lev3-input-txt',
-                     style={"display":"none"}),
-                 dbc.Tooltip(target="lev3-input-txt",id='lev3-tooltip'),
-
               ], title="Additional Options"),
            ],start_collapsed=True, className="my-accordion"),
        ]),

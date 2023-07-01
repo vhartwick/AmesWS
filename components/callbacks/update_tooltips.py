@@ -15,9 +15,7 @@ dv = df.var_data()
     Output("lon-tooltip", component_property="children"),
     Output("time-tooltip", component_property="children"),
     Output("tod-tooltip", component_property="children"),
-    Output("lev-tooltip", component_property="children"),
-    Output("lev2-tooltip", component_property="children"),
-    Output("lev3-tooltip", component_property="children")],
+    Output("lev-tooltip", component_property="children")],
     Input("plot-type-dropdown", "value"),
 )
 def update_tooltips(plot_input):
@@ -39,16 +37,8 @@ def update_tooltips(plot_input):
         else:
            output_dict[i] = 'Choose a single value "X", a range of values "X,Y" or to see average over the entire range "ALL"'
        
-        # Now take care of lev2 and lev3 for optional variables 1 and 2
-        if dimx == 'lev' or dimy == 'lev':
-           output_dict['lev2'] = 'Choose a range of values "X,Y" or to see the entire range "ALL"'
-           output_dict['lev3'] = 'Choose a range of values "X,Y" or to see the entire range "ALL"'
-        else:
-           output_dict['lev2'] = 'Choose a single value "X", a range of values "X,Y" or to see average over the entire range "ALL"'
-           output_dict['lev3'] = 'Choose a single value "X", a range of values "X,Y" or to see average over the entire range "ALL"'
-
     # Return the dictionary values as strings
-    return [str(output_dict.get(key, "")) for key in options + ['lev2', 'lev3']]
+    return [str(output_dict.get(key, "")) for key in options]
     
 
 

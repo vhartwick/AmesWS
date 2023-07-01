@@ -43,8 +43,6 @@ dp = df.plotting_options()
     State("lat-input", "value"),
     State("lon-input", "value"),
     State("lev-input", "value"),
-    State("lev2-input", "value"),
-    State("lev3-input", "value"),
     State("tod-input", "value"),
     State("cmap-dropdown", "value"),
     State("clev-input", "value"),
@@ -52,7 +50,7 @@ dp = df.plotting_options()
     prevent_initial_call=True,
 )
 
-def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,lev2_input,lev3_input,tod_input,cmap_input,clev_input,plot_title_input):
+def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,cmap_input,clev_input,plot_title_input):
     
     # initialize variables
     var1, var2, var3 = None, None, None
@@ -63,10 +61,10 @@ def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vco
     var1 = cf.load_data(model_input,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
 
     if str(var2_input) != "None":
-       var2 = cf.load_data(model_input,plot_input,var2_input,vcords_input,areo_input,lat_input,lon_input,lev2_input,tod_input)
+       var2 = cf.load_data(model_input,plot_input,var2_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
 
     if str(var3_input) != "None":
-       var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev3_input,tod_input)
+       var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
     
     fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input)  
     return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3
