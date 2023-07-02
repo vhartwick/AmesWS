@@ -98,7 +98,8 @@ def Sidebar():
                  html.P("Atmospheric Level", id='lev-input-txt',
                      style={"display":"none"}),
                  dbc.Tooltip(target="lev-input-txt",id='lev-tooltip'),
-
+                 dbc.Alert(id='lev-alert', color='danger', dismissable=True, is_open=False),
+              
               ], title="Additional Options"),
            ],start_collapsed=True, className="my-accordion"),
        ]),
@@ -121,7 +122,7 @@ def Sidebar():
                  style={"backgroundColor":"#252930"}, value='Oryel'),
                  html.P("Contour Color Map",id="cmap-dropdown-txt"),
 
-                 dcc.Input(id="clev-input",value='ALL', type='text'),
+                 dcc.Input(id="clev-input",value='DEFAULT', type='text'),
                  html.P(html.Span("Contour Range",id="clev-input-txt")),
                  dbc.Tooltip('Specify the desired range of contours "#,#"',target="clev-input-txt",id="clev-tooltip"),
 

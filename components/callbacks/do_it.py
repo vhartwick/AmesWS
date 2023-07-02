@@ -118,9 +118,9 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
        else:
           cmap = dv.loc[(dv['plot-type'] == plot_input) & (dv['variable'] == var1.name), 'cmap'].values[0]
 
-       if clev_input != "ALL":
+       if clev_input != "DEFAULT":
           dim_split = str(clev_input).split(",")
-          zmin,zmax= int(dim_split[0]),int(dim_split[1])
+          zmin,zmax= min(float(dim_split[0]),float(dim_split[1])),max(float(dim_split[0]),float(dim_split[1]))
        else:
           zmin,zmax = None,None
        
