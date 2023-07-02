@@ -88,10 +88,6 @@ def plotting_options():
         'tick': [60,30,60,2,0.5,10,10],
         'unit': ['[°E]', '[°N]', '[°Ls]','[LT]','[Pa]','[m]','[m]'],
        }
-   #d = {'dim':['lon','lat','time','time_of_day_12','lev'],
-   #     'range': [[0,360],[-90,90],[0,360],[0,24],[[700,0.1],[0,120],[0,120]]],
-   #     'tick': [60,30,60,2,[np.nan,10,10]],
-   #    } 
    dp = pd.DataFrame(data=d)
    return dp
 

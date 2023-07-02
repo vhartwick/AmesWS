@@ -11,7 +11,6 @@ dv = df.var_data()
 def fv3_data():
    dataDIR = '/Users/vhartwic/Desktop/amesWS/Data/00668.atmos_average_pstd.nc'
    ds = xr.open_dataset(dataDIR, decode_times=False)
-   #df = ds.to_dataframe()
    ds_sub = ds.ts.mean('time')
    df =ds_sub.to_pandas()
    return df
@@ -71,6 +70,7 @@ def load_data(model_input,plot_input,var_input,vcords_input,areo_input,lat_input
   var = []
 
   with xr.open_dataset(f_path,decode_times=False) as f:
+   
      # REPLACE TIME COORD WITH AREO
      areo_coord = np.array(f.areo[:,0]%360)
      f.coords['time'] = areo_coord
@@ -257,12 +257,10 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     if dim1_input !="ALL":
        dim_split = str(dim1_input).split(",")
        var = var.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-       #int(dim_split[0]),int(dim_split[1]))})
 
     if dim2_input !="ALL":
        dim_split = str(dim2_input).split(",")
        var = var.sel(**{dimy:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-       #int(dim_split[0]),int(dim_split[1]))})
 
     # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
     rlist_var = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var_input)),'rdims'].values[0]
@@ -292,12 +290,10 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
           if i != "lat":
              dim_split = str(user_input).split(",")
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-             #int(dim_split[0]),int(dim_split[1]))}).mean(i)
           else:  # if dimension is latitude need to do a weighted mean
              dim_split = str(user_input).split(",")
              weights = np.cos(np.deg2rad(f.lat))
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).weighted(weights).mean(i)
-             #int(dim_split[0]),int(dim_split[1]))}).weighted(weights).mean(i)   
        else: # single value selected
           var = var.sel(**{i:user_input},method='nearest')
 
@@ -334,12 +330,10 @@ def define_dims(f,dv,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_
        dim_split = str(dim1_input).split(",")
        print('dims', dim_split, max(int(dim_split[0]),int(dim_split[1])))
        dim1 = dim1.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-       #int(dim_split[0]),int(dim_split[1]))})
     
     if dim2_input !="ALL":
        dim_split = str(dim2_input).split(",")
        dim2 = dim2.sel(**{dimy:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-       #int(dim_split[0]),int(dim_split[1]))})
 
     return dim1, dim2, time_dim, vert_dim
 
@@ -363,7 +357,6 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     if dim1_input !="ALL":
        dim_split = str(dim1_input).split(",")
        var = var.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-       #int(dim_split[0]),int(dim_split[1]))})
 
     # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
     rlist_var = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var_input)),'rdims'].values[0]
@@ -394,13 +387,11 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
           if i != "lat":
              dim_split = str(user_input).split(",")
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-             #int(dim_split[0]),int(dim_split[1]))}).mean(i)
           else:  # if dimension is latitude need to do a weighted mean
              dim_split = str(user_input).split(",")
              print('lat loop',min(int(dim_split[0]),int(dim_split[1])))
              weights = np.cos(np.deg2rad(f.lat))
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).weighted(weights).mean(i)
-             #int(dim_split[0]),int(dim_split[1]))}).weighted(weights).mean(i)   
        else: # single value selected
           var = var.sel(**{i:user_input},method='nearest')
    
@@ -452,7 +443,6 @@ def define_1D_col(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcord
     if dim1_input !="ALL":
        dim_split = str(dim1_input).split(",")
        var = var.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-       #int(dim_split[0]),int(dim_split[1]))})
 
     # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
     rlist_var = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var_input)),'rdims'].values[0]
@@ -483,12 +473,10 @@ def define_1D_col(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcord
           if i != "lat":
              dim_split = str(user_input).split(",")
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).mean(i)
-             #int(dim_split[0]),int(dim_split[1]))}).mean(i)
           else:  # if dimension is latitude need to do a weighted mean
              dim_split = str(user_input).split(",")
              weights = np.cos(np.deg2rad(f.lat))
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).weighted(weights).mean(i)
-             #int(dim_split[0]),int(dim_split[1]))}).weighted(weights).mean(i)   
        else: # single value selected
           var = var.sel(**{i:user_input},method='nearest')
    

@@ -40,9 +40,6 @@ def fig_title(fig,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_in
     # select options based on user input
     rlist = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'rdims'].values[0]
 
-    # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
-    #rlist = [o for o in rlist if o != 'time_of_day_12' and tod_input == "ALL"]    
-
     # Then remove levels as necessary
     rlist = [o for o in rlist if o not in ('lev2','lev3')]
        
@@ -76,7 +73,6 @@ def fig_title(fig,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_in
     # order options (average first, if more than one average combine)
     #e.g. Global Diurnal Average @ X Pa
     text = sorted(text, key=lambda x: 'Average' in x, reverse=True)
-    #order = [o for x in order for o in [x] + (['@ ' + vcords_input] if vcords_input != 'ALL' else []) if o[0] in text]
     
     # Join the strings into a single text string
     text = ' '.join(text)

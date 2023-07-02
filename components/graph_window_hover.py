@@ -10,7 +10,6 @@ GW_STYLE = {
    "left": "18rem",
    "right": "5rem",
    "bottom":"60px",
-   #"height":"493px",
    "background-color":'#252930',
    "color":"white"
 }

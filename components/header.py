@@ -14,7 +14,6 @@ def Header():
       html.A(
                    # Use row and col to control vertical alignment of logo / brand
                    dbc.Row([
-                           #dbc.Col(html.Img(src=logo, height="190px"),width=2),
                            dbc.Col(html.Img(src=logo,height="170vh"),width=2),
                            dbc.Col([
                                #html.H2("Mars Climate Modeling Center <br/> Data Portal Web Interface",className="mcmc",

@@ -18,7 +18,6 @@ dv = df.var_data()
 )
 
 def update_variable1_options(input_value):
-    #return[o for o in sorted(set(dv['label'].loc[dv['plot-type']==input_value]))]
     return sorted({o for o in dv.loc[dv['plot-type']==input_value, 'label']})   # optimized using set comprehension
 
 

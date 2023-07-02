@@ -96,7 +96,6 @@ def update_timeseries(hoverData,plot_input,var1_input,var2_input,vcords_input,ti
                color='white')))
 
        return fig
-       #return di.create_time_series(plot_input,time_series_var,time_series_var2,time_dim,hv_min,hv_max,hv2_min,hv2_max)
     else:
        return dash.no_update
 

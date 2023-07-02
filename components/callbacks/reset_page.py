@@ -17,11 +17,5 @@ def reset_page(value, current_pathname):
     else:
         return current_pathname
 
-#@app.callback(Output('url', 'pathname'),
-#              Input('plot-type-dropdown', 'value'))
-
-#def reset_page(value):
-#    print('reset_page', value)
-#    return "/"
 
 

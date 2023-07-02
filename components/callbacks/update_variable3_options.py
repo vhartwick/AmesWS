@@ -24,17 +24,5 @@ dv = df.var_data()
 def update_variable_options(var1_input,var2_input,plot_input):
     options = sorted(set(dv.loc[dv['plot-type'] == plot_input, 'label']))
     display = "none" if "1D" not in str(plot_input) else "block"  
-    #return [ o for o in options if ("Surface" not in str(var1_input) or o != var1_input) and ("Surface" not in str(var2_input) or o!=var2_input)],{"display":display,"backgroundColor":"#252930"}, {"display":display}
     return [ o for o in options if  o != var1_input and o!=var2_input],{"display":display,"backgroundColor":"#252930"}, {"display":display}
 
-
-
-#    return [o for o in options if (o != var1_input or o != var2_input)],{"display":display}, {"display":display}
-
-#    if "1D" in str(plot_input):
-#      return[o for o in sorted(set(dv['label'].loc[dv['plot-type']==plot_input]))
-#          if o != var1_input and o!=var2_input],{"display":"block"},{"display":"block"}
-#    else:
-#      return[o for o in sorted(set(dv['label'].loc[dv['plot-type']==plot_input]))
-#           if o != var1_input],{"display":"none"},{"display":"none"}
-#

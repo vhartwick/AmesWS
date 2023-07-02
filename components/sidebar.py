@@ -132,17 +132,8 @@ def Sidebar():
               ], title="Plotting Style Options"),
            ],start_collapsed=True, id="plotting-accordian",className="my-accordion"),
        ]),
-       #],style={"backgroundColor":"#252930"}),
-
 
        dcc.Location(id='url',pathname='/',refresh=True),
-
-       #html.Div(id='page-content'),
-   
-       #html.Div(
-       #  id="page-content",
-       #),
-
    ],className="sidebar_vlh") # close html div
 
     

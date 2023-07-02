@@ -96,7 +96,6 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,vcords_in
             title=xaxis_column_name,
             tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
             showgrid=False,
-            #range=[hvv_min,hvv_max],
             side='bottom',
             color='#808ef2'),
           yaxis=dict(
@@ -115,8 +114,6 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,vcords_in
 
        fig_visibility = {"display":"block"} 
        return fig, fig_visibility
-
-       #return di.create_vertical_profile(plot_input,vertical_profile_var,vertical_profile_var2,vert_dim,hv_min,hv_max,hv2_min,hv2_max)
 
     else:
        return dash.no_update

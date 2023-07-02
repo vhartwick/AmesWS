@@ -30,8 +30,6 @@ dp = df.plotting_options()
     Output("var1-sav", "data"),
     Output("var2-sav", "data"),
     Output("var3-sav", "data")],
-    #Output("time-var-sav","data"),
-    #Output("vert-var-sav","data")],
     Input("btn-doit-txt","n_clicks"),
     [State("model-dropdown", "value"),
     State("plot-type-dropdown", "value"),
@@ -161,12 +159,6 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           plot_bgcolor="#252930",
         )
 
-       #fig.update_traces(hovertemplate = f"{dim2.name}: %{y:.2f}<br>")       
-       #fig.update_traces(hovertemplate = f"{dim2.name}:%{y}<br>")
-       #                                  f"{dim1.name}:%{dim1}<br>"+
-       #                                  f"{var1.name}:%{var1}<br>"+
-       #                                  f"{var2.name}:%{var2}<br>")
-                 
        xaxis_column_name = dv.loc[(dv['plot-type']==plot_input),'xaxis_name'].values[0]
        yaxis_column_name = dv.loc[(dv['plot-type']==plot_input),'yaxis_name'].values[0]
 
@@ -178,7 +170,6 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
 
        if dim2.name == 'pstd': 
           fig.update_yaxes(title=yaxis_column_name, tickvals=[1000,500,50,10,5,1,0.5,0.1,0.05,0.01],autorange='reversed',type='log')
-          #fig.update_yaxes(title=yaxis_column_name, tickvals=[1000,500,100,50,10,5,1,0.5,0.1,0.05],autorange='reversed',type='log')
        else:
           fig.update_yaxes(title=yaxis_column_name, range=[yrange[0],yrange[1]],dtick=ytick)
   
@@ -266,8 +257,6 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
                 range=[var1.min(),var1.max()]))
 
        fig.update_layout(
-          #title=plot_title_input,
-          #title_x=0.5,
           font_color="white",
           paper_bgcolor="#252930",
           plot_bgcolor="#252930",
@@ -301,7 +290,6 @@ def create_vertical_profile(plot_input,vertical_profile_var,vert_dim,hv_min,hv_m
           font_size=11,
           paper_bgcolor="#252930",
           plot_bgcolor="#252930",
-          #xaxis_range=[min,max],
         )
 
 
