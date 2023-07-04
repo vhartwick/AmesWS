@@ -17,13 +17,18 @@ Download Instructions:
 ```     
 	conda activate amesWS-env
 ```
+4. Create a Local Data Directory & Download Data from NAS 
+```
+        mkdir amesWS/Data/sim1
+        Sample Data Files are located in a shared directory on NAS
+        /u/mkahre/MCMC/tmp/4victoria/C48_L30_MY34/
+```
 4. Change the File Paths to Your Data
 ```
 	vi utils/common_functions.py 
         **change all file paths in def file_path (right now you only need to worry about the one copied below)
-        I recommend adding a Data directory to amesWS (shown below)**      
 	if vcords_input == "pstd" : # load atmos_average_pstd
-       		f_path = '/PATH/TO/DATA/amesWS/Data/00668.atmos_average_pstd.nc'
+       		f_path = f'/PATH/TO/DATA/amesWS/Data/{model_input}/00668.atmos_average_pstd.nc'
 ```
 5. Run App
 ```  	
