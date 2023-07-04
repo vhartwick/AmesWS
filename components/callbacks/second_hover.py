@@ -25,6 +25,7 @@ dp = df.plotting_options()
     [State("plot-type-dropdown", "value"),
     State("variable1-dropdown","value"),
     State("variable2-dropdown","value"),
+    State("model-dropdown", "value"),
     State("vertical-coordinates-radio", "value"),
     State("solar-longitude-input", "value"),
     State("lat-input", "value"),
@@ -36,7 +37,7 @@ dp = df.plotting_options()
     prevent_initial_call = True)
 
 
-def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,vert_dim_input):
+def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,model_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,vert_dim_input):
 
     fig_visibility = {"display":"none"}
 
@@ -48,7 +49,7 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,vcords_in
        dimx_hover = hoverData['points'][0]['x']
        dimy_hover = hoverData['points'][0]['y']
 
-       hvv_min,hvv_max,vertical_profile_var = cf.select_vertical_profile_var(dv,plot_input,var1_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover)
+       hvv_min,hvv_max,vertical_profile_var = cf.select_vertical_profile_var(dv,plot_input,var1_input,model_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover)
     
        # LOAD SECOND VARRIABLE IF SELECTED
        if str(var2_input) != "None":
@@ -76,11 +77,11 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,vcords_in
 
        # Update Vertical Profile Title
        if plot_input == '2D_lat_lev':
-          title = 'Vertical Profile @'+str(dimx_hover)+'N'
+          title = 'Vertical Profile <br>('+str(dimx_hover)+'N)'
        elif plot_input == '2D_lon_lev':
-          title = 'Vertical Profile @'+str(dimx_hover)+'E'
+          title = 'Vertical Profile <br>('+str(dimx_hover)+'E)'
        else:
-          title = 'Vertical Profile @'+str(dimy_hover)+'N, '+str(dimx_hover)+'E'
+          title = 'Vertical Profile <br>('+str(dimy_hover)+'N, '+str(dimx_hover)+'E)'
       
        fig.update_layout(
           title=title,

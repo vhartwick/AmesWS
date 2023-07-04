@@ -88,8 +88,8 @@ def select_timeseries_hover_var(dv,plot_input,var1_input,vcords_input,areo_input
 
     # FIRST LOAD DATA
     # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-    f_path = file_path(tod_input,vcords_input) 
-   
+    f_path = file_path(model_input,tod_input,vcords_input)
+    
     # LOAD DATA   
     # reset saved variables
     hover_var = [] 
@@ -160,11 +160,11 @@ def select_timeseries_hover_var(dv,plot_input,var1_input,vcords_input,areo_input
 
        return hv_min,hv_max,hover_var
 
-def select_vertical_profile_var(dv,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover):
+def select_vertical_profile_var(dv,plot_input,var1_input,model_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover):
     
     # FIRST LOAD DATA
     # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-    f_path = file_path(tod_input,vcords_input)    
+    f_path = file_path(model_input,tod_input,vcords_input)
 
     # reset saved variables
     hover_var = []
@@ -400,7 +400,7 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
 def load_column_data(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
   # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(tod_input,vcords_input)
+  f_path = file_path(model_input,tod_input,vcords_input)
 
   # LOAD DATA
   # order : plot_input, array dimensions, specified lat,lon,lev,areo
