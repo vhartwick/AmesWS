@@ -4,7 +4,17 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html
+from dash.dependencies import Input, Output, State
 from index import app
+
+# Connect to your app pages
+from pages import analytics
+
+# Connect the header & navbar (which appear on all pages) to the index
+from components import navbar
+from components import header
+
+# Load all callbacks
 from components.callbacks import update_variable1_options
 from components.callbacks import update_variable2_options
 from components.callbacks import update_variable3_options
@@ -22,11 +32,26 @@ from components import header, sidebar, graph_window, abar
 
 # define the components
 header = header.Header()
-sidebar = sidebar.Sidebar()
-graph_window = graph_window.Graph_Window()
-abar = abar.Abar()
+nav = navbar.Navbar()
 
-app.layout = html.Div([dcc.Location(id="url"),
-                header,sidebar,graph_window,abar], style={'background_color':'#252930'})
+# Define the index page layout
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    header,
+    html.A("Test Text", style={"color":"white"}),
+    html.Div(id='page-content', children=[]),
+])
+
+app.config.suppress_callback_exceptions = True
+
+# Create the callback to handle mutlipage inputs
+@app.callback(Output('page-content', 'children'),
+              [Input('url', 'pathname')])
+def display_page(pathname):
+    if pathname == '/analytics':
+        return analtyics.layout
+    else: # if redirected to unknown link
+        return "404 Page Error! Please choose a link"
+
 
 
