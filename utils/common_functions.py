@@ -328,7 +328,6 @@ def define_dims(f,dv,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_
        
     if dim1_input !="ALL":
        dim_split = str(dim1_input).split(",")
-       print('dims', dim_split, max(int(dim_split[0]),int(dim_split[1])))
        dim1 = dim1.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
     
     if dim2_input !="ALL":
@@ -367,13 +366,11 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     ## FIX!!!!
     # remove other levels
     rlist_var = [o for o in rlist_var if o not in ('lev2','lev3')]
-    print(rlist_var)
     for i in rlist_var:    # i dimension name, dim_input = "all, int, or range"
       
        user_input = lon_input if i=='lon' \
           else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
 
-       print(i,user_input)
        if i == 'lev':  # replace lev with pstd, zstd, zagl
           i = vcords_input
 
@@ -390,7 +387,6 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).mean(i)
           else:  # if dimension is latitude need to do a weighted mean
              dim_split = str(user_input).split(",")
-             print('lat loop',min(int(dim_split[0]),int(dim_split[1])))
              weights = np.cos(np.deg2rad(f.lat))
              var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).weighted(weights).mean(i)
        else: # single value selected
