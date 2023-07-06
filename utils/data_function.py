@@ -38,15 +38,15 @@ def var_data():
 
         'dimx':['lon','time','time','time','lat','lon','time_of_day_12',
                 'lon','time','time','time','lat','lon','time_of_day_12',
-                'lon','lat','lon','time','time','time','time','lat','lon','NaN','time_of_day_12',
-                'lon','lat','lon','time','time','time','time','lat','lon','NaN','time_of_day_12',
-                'lon','lat','lon','time','time','time','time','lat','lon','NaN','time_of_day_12'],
+                'lon','lat','lon','time','time','time','time','lat','lon','lev','time_of_day_12',
+                'lon','lat','lon','time','time','time','time','lat','lon','lev','time_of_day_12',
+                'lon','lat','lon','time','time','time','time','lat','lon','lev','time_of_day_12'],
            
         'dimy':['lat','lat','lon','NaN','NaN','NaN','NaN',
                 'lat','lat','lon','NaN','NaN','NaN','NaN',
-                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','lev','NaN',
-                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','lev','NaN',
-                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','lev','NaN'],
+                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','NaN','NaN',
+                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','NaN','NaN',
+                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','NaN','NaN'],
 
         'xaxis_name':['Longitude','Ls','Ls','Ls','Latitude','Longitude','Local Time',
                       'Longitude','Ls','Ls','Ls','Latitude','Longitude','Local Time',

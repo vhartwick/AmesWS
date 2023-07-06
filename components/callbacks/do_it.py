@@ -173,14 +173,51 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
        else:
           fig.update_yaxes(title=yaxis_column_name, range=[yrange[0],yrange[1]],dtick=ytick)
   
-       
-    else:  # 1D PLOT
-
+    elif plot_input == "1D_lev":   # 1D vertical profile
 
        dim1,var1 = json.loads(dim1),json.loads(var1)
        dim1,var1 = xr.DataArray.from_dict(dim1),xr.DataArray.from_dict(var1)
+       
+        # plot figure
+       fig = go.Figure(data=go.Scatter(x=np.array(var1),y=np.array(dim1), xaxis='x1', name=var1.name,line=dict(color="#808ef2")))
+       
+       if var2:
+          var2 = json.loads(var2)
+          var2 = xr.DataArray.from_dict(var2)
+          fig.add_trace(go.Scatter(x=np.array(var2),y=np.array(dim1),xaxis='x2',name=var2.name))
+          fig.update_layout(
+             xaxis2=dict(
+               title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
+               side='top',
+               overlaying='x1',
+               showgrid=False,
+               tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
+               range=[var2.min(),var2.max()]))
+       if var3:
+          var3 = json.loads(var3)
+          var3 = xr.DataArray.from_dict(var3)
+          fig.add_trace(go.Scatter(x=np.array(var3),y=np.array(dim1),xaxis='x3',name=var3.name))
+          fig.update_layout(
+             xaxis3=dict(
+               title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
+               side='top',
+               overlaying='x1',
+               showgrid=False,
+               tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
+               range=[var3.min(),var3.max()]))
+ 
+       fig.update_layout(
+          yaxis=dict(
+             #title=dv.loc[(dv['plot_type']==plot_input.name),'unit'].values[0],
+             type='log',
+             showgrid=False,
+             tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
+             autorange='reversed'))
 
-       # get information about y-axis based on variable
+    else:  # 1D PLOT
+
+       dim1,var1 = json.loads(dim1),json.loads(var1)
+       dim1,var1 = xr.DataArray.from_dict(dim1),xr.DataArray.from_dict(var1)
 
        # plot figure
        fig = go.Figure(data=go.Scatter(x=np.array(dim1),y=np.array(var1),yaxis='y1',name=var1.name,line=dict(color="#808ef2")))

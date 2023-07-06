@@ -91,7 +91,6 @@ def fig_title(fig,plot_input,model_input,var1_input,vcords_input,areo_input,lat_
           else:
              with xr.open_dataset(f_path,decode_times=False) as f:
                 nearest_value=f[i].sel(**{i:user_input},method='nearest').values
-                print(nearest_value)
              text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit_options[dim_index]]
 
     # order options (average first, if more than one average combine)
