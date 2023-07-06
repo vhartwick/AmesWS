@@ -289,7 +289,7 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
        elif "," in user_input:   # range of values selected
           if i != "lat":
              dim_split = str(user_input).split(",")
-             var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
+             var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).mean(i)
           else:  # if dimension is latitude need to do a weighted mean
              dim_split = str(user_input).split(",")
              weights = np.cos(np.deg2rad(f.lat))
@@ -386,7 +386,7 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
        elif "," in user_input:   # range of values selected
           if i != "lat":
              dim_split = str(user_input).split(",")
-             var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
+             var = var.sel(**{i:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))}).mean(i)
           else:  # if dimension is latitude need to do a weighted mean
              dim_split = str(user_input).split(",")
              print('lat loop',min(int(dim_split[0]),int(dim_split[1])))
