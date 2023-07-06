@@ -53,7 +53,7 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,model_inp
     
        # LOAD SECOND VARRIABLE IF SELECTED
        if str(var2_input) != "None":
-          hv2_min,hv2_max,vertical_profile_var2 = cf.select_vertical_profile_var(dv,plot_input,var2_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover)
+          hv2_min,hv2_max,vertical_profile_var2 = cf.select_vertical_profile_var(dv,plot_input,var2_input,model_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover)
 
        # NOW CREATE THE FIGURE
        yaxis_column_name=dp.loc[(dp['dim']==vert_dim.name),'unit'].values[0]
@@ -80,6 +80,12 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,model_inp
           title = 'Vertical Profile <br>('+str("%.1f" % dimx_hover)+'N)'
        elif plot_input == '2D_lon_lev':
           title = 'Vertical Profile <br>('+str("%.1f" % dimx_hover)+'E)'
+       elif plot_input == '2D_time_lat':
+          title = 'Vertical Profile <br>('+str("%.1f" % dimy_hover)+'N, '+str("%.1f" % dimx_hover)+'°Ls)'
+       elif plot_input == '2D_time_lon':
+          title = 'Vertical Profile <br>('+str("%.1f" % dimy_hover)+'E, '+str("%.1f" % dimx_hover)+'°Ls)'       
+       elif plot_input == '2D_time_lev':
+          title = 'Vertical Profile <br>('+str("%.1f" % dimx_hover)+'°Ls)'
        else:
           title = 'Vertical Profile <br>('+str("%.1f" % dimy_hover)+'N, '+str("%.1f" % dimx_hover)+'E)'
       
