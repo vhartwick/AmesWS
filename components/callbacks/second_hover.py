@@ -77,11 +77,11 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,model_inp
 
        # Update Vertical Profile Title
        if plot_input == '2D_lat_lev':
-          title = 'Vertical Profile <br>('+str(dimx_hover)+'N)'
+          title = 'Vertical Profile <br>('+str(d"%.1f" %imx_hover)+'N)'
        elif plot_input == '2D_lon_lev':
-          title = 'Vertical Profile <br>('+str(dimx_hover)+'E)'
+          title = 'Vertical Profile <br>('+str(d"%.1f" %imx_hover)+'E)'
        else:
-          title = 'Vertical Profile <br>('+str(dimy_hover)+'N, '+str(dimx_hover)+'E)'
+          title = 'Vertical Profile <br>('+str("%.1f" % dimy_hover)+'N, '+str("%.1f" % dimx_hover)+'E)'
       
        fig.update_layout(
           title=title,
