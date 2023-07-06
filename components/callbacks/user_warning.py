@@ -84,11 +84,22 @@ def format_check(plot_input,var_name,var_longname,var_input):
 
    # Define the regular expression to match the user input
    if var_name in dimx or var_name in dimy:   # if user variable is one of the plot dimensions
-      input_pattern = r'^(-?\d+,-?\d+|ALL)$'
-      format_error_message = f"User Input is not in the expected format. Separate values for the {var_longname} range by a single comma with no spaces or, to include the entire range, type ALL"
+      if var_name == "lat" or var_name == "lon": # allow negative numbers
+         input_pattern = r'^(-?\d+,-?\d+|ALL)$'
+         format_error_message = f"User Input is not in the expected format. You can specify a range of values separated by a single comma with no spaces or, to include the entire range, type ALL"
+      else:
+         input_pattern = r'^(\d+,\d+|ALL)$'
+         format_error_message = f"User Input is not in the expected format. You can specify a range of values separated by a single comma with no spaces or, to include the entire range, type ALL. Values must be positive"
    else:
-      input_pattern = r'^(-?\d+,-?\d+|-?\d+|ALL)$'
-      format_error_message = f"User Input is not in the expected format. You can specify a single numeric value (#), a range of values separated by a single comma with no spaces, or to include the entire {var_longname} range, type ALL"
+      if var_name == "lat" or var_name == "lon": # allow negative numbers
+         input_pattern = r'^(-?\d+,-?\d+|-?\d+|ALL)$'
+         format_error_message = f"User Input is not in the expected format. You can specify a single numeric value (#), a range of values separated by a single comma with no spaces, or to include the entire {var_longname} range, type ALL"
+      elif var_name != "lev":  # allow range
+         input_pattern = r'^(\d+,\d+|\d+|ALL)$'
+         format_error_message = f"User Input is not in the expected format. You can specify a single positive numeric value (#), a range of values separated by a single comma with no spaces, or to include the entire {var_longname} range, type ALL"
+      else:
+         input_pattern = r'^(\d+)$'
+         format_error_message = f"User Input is not in the expected format. You can specify a single positive numeric value (#)"
     
    # check format & return if not matching expected format
    if not re.match(input_pattern, var_input):
