@@ -205,17 +205,17 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
                showgrid=False,
                tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
                range=[var3.min(),var3.max()]))
-       
+      
        fig.update_layout(
           paper_bgcolor="#252930",
           plot_bgcolor="#252930",
           font_color="white",
           font_size=11,
           margin={'l':1,'r':1,'t':1,'b':1},
-          #xaxis=dict(
-          #    title=dv.loc[(dv['variable']==var1.name),'unit'].values[0],
-          #    range = [xrange[0],xrange[1]],
-          #    dtick = xtick),
+          xaxis=dict(
+               showgrid=False,
+               range=[var1.min(),var1.max()],
+               title=dv.loc[(dv['variable']==var1.name),'unit'].values[0]),
           legend=dict(
             x=0.01,
             y=1.03,
@@ -228,9 +228,8 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
 
        fig.update_layout(
           yaxis=dict(
-             #title=dv.loc[(dv['plot_type']==plot_input.name),'unit'].values[0],
+             title=dp.loc[(dp['dim']==vcords_input),'unit'].values[0],
              type='log',
-             showgrid=False,
              tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
              autorange='reversed'))
 
