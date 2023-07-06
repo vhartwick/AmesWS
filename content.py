@@ -8,10 +8,9 @@ from dash.dependencies import Input, Output, State
 from index import app
 
 # Connect to your app pages
-from pages import analytics
+from pages import home,analytics
 
 # Connect the header & navbar (which appear on all pages) to the index
-from components import navbar
 from components import header
 
 # Load all callbacks
@@ -32,7 +31,6 @@ from components import header, sidebar, graph_window, abar
 
 # define the components
 header = header.Header()
-nav = navbar.Navbar()
 
 # Define the index page layout
 app.layout = html.Div([
@@ -48,8 +46,11 @@ app.config.suppress_callback_exceptions = True
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
+    print(pathname)
+    if pathname == '/home' or pathname == '/':
+       return home.layout
     if pathname == '/analytics':
-        return analtyics.layout
+        return analytics.layout
     else: # if redirected to unknown link
         return "404 Page Error! Please choose a link"
 

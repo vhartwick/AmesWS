@@ -37,6 +37,15 @@
    color:white;
 }
 
+.card_links {
+   position: fixed;
+   top: 25vh;
+   left:330px;
+   right:18vw;
+   bottom: 10vh;
+   color:white;
+}
+
 .header {
    position: fixed;
    top: 0;

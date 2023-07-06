@@ -20,6 +20,11 @@ def Header():
                                html.H2(["Mars Climate Modeling Center", html.Br(), "Data Portal Web Interface"],className="mcmc",
                                   style={"color": "#FCD7BC","font-family":"Helvetica Neue","letter-spacing":"10px"},
                                ), 
+                           dbc.NavbarSimple([
+                              dbc.NavItem(dbc.NavLink("Home", href="/home", style={"color":"white"})),
+                              dbc.NavItem(dbc.NavLink("Analytics", href="/analytics", style={"color":"white"})),
+                           ], color="#25293"),
+
 #                               html.P(
 #                                  "Some quick example text to build on the card title and make "
 #                                  "up the bulk of the card's content.",
