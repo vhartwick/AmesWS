@@ -62,15 +62,17 @@ def user_warning(lat_input,lon_input,ls_input,tod_input,vcords_input,lev_input,c
       # Next Check Values
       alert_message[i], alert_is_open[i], button_status = range_check(i,var_list[i],input_list[i],vcords_input)
   
-
-   # Now check contour ranges (acceptable characters are - , . and DEFAULT)
+   ## Now check contour ranges (acceptable characters are - , . and DEFAULT)
    input_pattern = r'^(-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?|DEFAULT)$'
    format_error_message = "User Input is not in the expected format. Separate values for the contour range by a single comma with no spaces or, to use the default contour range, type DEFAULT"   
    if not re.match(input_pattern, clev_input):
       alert_message[5] = format_error_message
       alert_is_open[5] = True
-      button_status = False
+      button_status = True
  
+   if any(alert_is_open):  # checks if any alerts are open
+      button_status= True
+   
    return alert_message[0], alert_is_open[0], alert_message[1], alert_is_open[1], alert_message[2], alert_is_open[2], alert_message[3], alert_is_open[3], alert_message[4], alert_is_open[4], alert_message[5], alert_is_open[5], button_status
 
 def format_check(plot_input,var_name,var_longname,var_input):
