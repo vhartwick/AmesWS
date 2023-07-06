@@ -39,11 +39,12 @@
 
 .card_links {
    position: fixed;
-   top: 25vh;
+   top: 30vh;
    left:330px;
    right:18vw;
    bottom: 10vh;
-   color:white;
+   color:black;
+   overflow-y:scroll;
 }
 
 .header {

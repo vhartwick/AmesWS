@@ -8,7 +8,7 @@ def Cardlinks():
 
    layout = html.Div([
                dbc.Card([ 
-                  dbc.CardImg(src="/static/images/placeholder286x180.png", top=True),
+                  dbc.CardImg(src="/assets/images/Current_Mars_Diagram_Final_Apr12.png",top=True),
                   dbc.CardBody([
                      html.H4("Card title", className="card-title"),
                      html.P(
