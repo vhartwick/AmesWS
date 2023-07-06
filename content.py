@@ -46,7 +46,6 @@ app.config.suppress_callback_exceptions = True
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
-    print(pathname)
     if pathname == '/home' or pathname == '/':
        return home.layout
     if pathname == '/analytics':
