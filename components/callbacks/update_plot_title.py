@@ -64,21 +64,35 @@ def fig_title(fig,plot_input,model_input,var1_input,vcords_input,areo_input,lat_
        user_input = lon_input if i=='lon' \
           else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
 
-       # select text based on  both
-       if "ALL" not in user_input:  # single value or range selected
+       if user_input == 'ALL':
+          text += [text_options[dim_index][0]]
+
+       elif "," in user_input:   # range of values selected
+          dim_split = str(user_input).split(",")
           # check for unit
           if i == 'lev':
              unit = 'Pa' if vcords_input == 'pstd' else 'm'
              dim = vcords_input
              with xr.open_dataset(f_path,decode_times=False) as f:
-                text += ['@ ' + text_options[dim_index][1]+f[dim].sel(**{dim:user_input},method='nearest').values + unit] 
+                text += ['@ ' + text_options[dim_index][1]+f[dim].sel(**{dim:dim_split[0]},method='nearest').values+'-'+ f[dim].sel(**{dim:dim_split[1]},method='nearest').values + unit]
+          else:
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]]
+       else: # single value selected
+          # check for unit
+          if i == 'lev':
+             unit = 'Pa' if vcords_input == 'pstd' else 'm'
+             dim = vcords_input
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
+                text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit] 
           else:
              with xr.open_dataset(f_path,decode_times=False) as f:
                 nearest_value=f[i].sel(**{i:user_input},method='nearest').values
                 print(nearest_value)
              text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit_options[dim_index]]
-       elif user_input == 'ALL':
-          text += [text_options[dim_index][0]]
 
     # order options (average first, if more than one average combine)
     #e.g. Global Diurnal Average @ X Pa
