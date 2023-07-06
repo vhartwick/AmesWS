@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output, State
 from utils import data_function as df
 import xarray as xr
 import numpy as np
+from utils import common_functions as cf
 
 # Load Variable Data
 dv = df.var_data() 
@@ -17,6 +18,7 @@ dp = df.plotting_options()
     Output("fig-title","children"),
     Input("figure_out","figure"),
     [State("plot-type-dropdown", "value"),
+    State("model-dropdown", "value"),
     State("variable1-dropdown", "value"),
     State("vertical-coordinates-radio", "value"),
     State("solar-longitude-input", "value"),
@@ -27,8 +29,11 @@ dp = df.plotting_options()
     prevent_initial_call=True,
 )
 
-def fig_title(fig,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
+def fig_title(fig,plot_input,model_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
+    # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
+    f_path = cf.file_path(model_input,tod_input,vcords_input)
+    
     text_options = [['Zonal Average', ''],
                    ['Meridional Average', ''],
                    ['Column Integrated', ''], 
@@ -59,16 +64,35 @@ def fig_title(fig,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_in
        user_input = lon_input if i=='lon' \
           else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
 
-       # select text based on  both
-       if "ALL" not in user_input:  # single value or range selected
+       if user_input == 'ALL':
+          text += [text_options[dim_index][0]]
+
+       elif "," in user_input:   # range of values selected
+          dim_split = str(user_input).split(",")
           # check for unit
           if i == 'lev':
              unit = 'Pa' if vcords_input == 'pstd' else 'm'
-             text += ['@ ' + text_options[dim_index][1]+user_input + unit] 
+             dim = vcords_input
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                text += ['@ ' + text_options[dim_index][1]+f[dim].sel(**{dim:dim_split[0]},method='nearest').values+'-'+ f[dim].sel(**{dim:dim_split[1]},method='nearest').values + unit]
           else:
-             text += ['@ ' + text_options[dim_index][1]+user_input + unit_options[dim_index]]        
-       elif user_input == 'ALL':
-          text += [text_options[dim_index][0]]
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]]
+       else: # single value selected
+          # check for unit
+          if i == 'lev':
+             unit = 'Pa' if vcords_input == 'pstd' else 'm'
+             dim = vcords_input
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
+                text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit] 
+          else:
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
+                print(nearest_value)
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit_options[dim_index]]
 
     # order options (average first, if more than one average combine)
     #e.g. Global Diurnal Average @ X Pa

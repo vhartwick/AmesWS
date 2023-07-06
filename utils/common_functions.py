@@ -367,12 +367,13 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     ## FIX!!!!
     # remove other levels
     rlist_var = [o for o in rlist_var if o not in ('lev2','lev3')]
-
+    print(rlist_var)
     for i in rlist_var:    # i dimension name, dim_input = "all, int, or range"
-
+      
        user_input = lon_input if i=='lon' \
           else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
 
+       print(i,user_input)
        if i == 'lev':  # replace lev with pstd, zstd, zagl
           i = vcords_input
 
