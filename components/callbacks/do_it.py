@@ -172,13 +172,14 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           fig.update_yaxes(title=yaxis_column_name, tickvals=[1000,500,50,10,5,1,0.5,0.1,0.05,0.01],autorange='reversed',type='log')
        else:
           fig.update_yaxes(title=yaxis_column_name, range=[yrange[0],yrange[1]],dtick=ytick)
-  
+ 
+    # 1D_LEV PLOT 
     elif plot_input == "1D_lev":   # 1D vertical profile
 
        dim1,var1 = json.loads(dim1),json.loads(var1)
        dim1,var1 = xr.DataArray.from_dict(dim1),xr.DataArray.from_dict(var1)
        
-        # plot figure
+       # plot figure
        fig = go.Figure(data=go.Scatter(x=np.array(var1),y=np.array(dim1), xaxis='x1', name=var1.name,line=dict(color="#808ef2")))
        
        if var2:
@@ -190,21 +191,27 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
                title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
                side='top',
                overlaying='x1',
+               zeroline=False,
                showgrid=False,
-               tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-               range=[var2.min(),var2.max()]))
+               tickcolor='#d85d44',tickwidth=2, ticklen=10,ticks='inside',
+               range=[var2.min(),var2.max()],
+               color='#d85d44'))
        if var3:
           var3 = json.loads(var3)
           var3 = xr.DataArray.from_dict(var3)
           fig.add_trace(go.Scatter(x=np.array(var3),y=np.array(dim1),xaxis='x3',name=var3.name))
           fig.update_layout(
-             xaxis3=dict(
+             yaxis=dict(domain=[0,0.80]),
+             xaxis2=dict(position=0.80),
+             xaxis3=dict(position=1.0,
                title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
                side='top',
                overlaying='x1',
+               zeroline=False,
                showgrid=False,
-               tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-               range=[var3.min(),var3.max()]))
+               tickcolor='#1ac483',tickwidth=2, ticklen=10,ticks='inside',
+               range=[var3.min(),var3.max()],
+               color='#1ac483'))
       
        fig.update_layout(
           paper_bgcolor="#252930",
@@ -213,20 +220,20 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           font_size=11,
           margin={'l':1,'r':1,'t':1,'b':1},
           xaxis=dict(
+               zeroline=False,
                showgrid=False,
                range=[var1.min(),var1.max()],
-               title=dv.loc[(dv['variable']==var1.name),'unit'].values[0]),
+               title=dv.loc[(dv['variable']==var1.name),'unit'].values[0],
+               color='#808ef2',
+               tickcolor='#808ef2',tickwidth=2, ticklen=10,ticks='inside'),
           legend=dict(
             x=0.01,
-            y=1.03,
+            y=0.9,
             orientation='v',
             bgcolor='#252930',
             font=dict(
               size=11,
-              color='white')))      
-       
-
-       fig.update_layout(
+              color='white')),      
           yaxis=dict(
              title=dp.loc[(dp['dim']==vcords_input),'unit'].values[0],
              type='log',
@@ -245,82 +252,54 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           var2 = json.loads(var2)
           var2 = xr.DataArray.from_dict(var2)
           fig.add_trace(go.Scatter(x=np.array(dim1),y=np.array(var2),yaxis='y2',name=var2.name))
-          if var2.name== "ps":
-             fig.update_layout(
-                yaxis2=dict(
-                   title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
-                   type='log',
-                   side='right',
-                   overlaying='y1',
-                   showgrid=False,
-                   tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-                   autorange='reversed'))
-          else:
-             fig.update_layout(
-                yaxis2=dict(
-                  title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
-                  side='right',
-                  overlaying='y1',
-                  showgrid=False,
-                  tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-                  range=[var2.min(),var2.max()]))
+          fig.update_layout(
+             yaxis2=dict(
+               title=dv.loc[(dv['variable']==var2.name),'unit'].values[0],
+               side='right',
+               overlaying='y1',
+               zeroline=False,
+               showgrid=False,
+               tickcolor='#d85d44',tickwidth=2, ticklen=10,ticks='inside',
+               range=[var2.min(),var2.max()],
+               color='#d85d44'))
        if var3:
           var3 = json.loads(var3)
           var3 = xr.DataArray.from_dict(var3)
           fig.add_trace(go.Scatter(x=np.array(dim1),y=np.array(var3),yaxis='y3',name=var3.name))
-          if var3.name== "ps":
-             fig.update_layout(
-                yaxis2=dict(position=0.9),
-                yaxis3=dict(
-                   title=dv.loc[(dv['variable']==var3.name),'unit'].values[0],
-                   type='log',
-                   side='right',
-                   overlaying='y1',
-                   showgrid=False,
-                   tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-                   range=[var3.max(),var3.min()]))
-          else:
-             fig.update_layout(
-                yaxis2=dict(position=0.9),
-                yaxis3=dict(
-                   title=dv.loc[(dv['variable']==var3.name),'unit'].values[0],
-                   side='right',
-                   overlaying='y1',
-                   showgrid=False,
-                   tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-                   range=[var3.min(),var3.max()]))
+          fig.update_layout(
+             xaxis=dict(domain=[0.0,0.86]),
+             yaxis2=dict(position=0.86),
+             yaxis3=dict(position=1.0,
+                title=dv.loc[(dv['variable']==var3.name),'unit'].values[0],
+                side='right',
+                overlaying='y1',
+                zeroline=False,
+                showgrid=False,
+                tickcolor='#1ac483',tickwidth=2, ticklen=10,ticks='inside',
+                range=[var3.min(),var3.max()],
+                color='#1ac483'))
 
        # load x-axis information
        xaxis_title = dv.loc[(dv['plot-type']==plot_input),'xaxis_name'].values[0]
        xrange,xtick = dp.loc[(dp['dim']==dim1.name),'range'].values[0],dp.loc[(dp['dim']==dim1.name),'tick'].values[0]
       
        # load y-axis information
-       yaxis_column_name = dv.loc[(dv['variable']==var1.name),'unit'].values[0]
-       if var1.name== "ps":
-          fig.update_layout(
-             yaxis=dict(
-                title=yaxis_column_name,
-                autorange='reversed',
-                type='log',
-                tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-                showgrid=False))
-       else:
-          fig.update_layout(
-             yaxis=dict(
-                title=yaxis_column_name,
-                showgrid=False,
-                tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
-                range=[var1.min(),var1.max()]))
-
        fig.update_layout(
+          yaxis=dict(
+              title=dv.loc[(dv['variable']==var1.name),'unit'].values[0],
+              zeroline=False,
+              showgrid=False,
+              tickcolor='#808ef2',tickwidth=2, ticklen=10,ticks='inside',
+              range=[var1.min(),var1.max()],
+              color='#808ef2'),
           font_color="white",
           paper_bgcolor="#252930",
           plot_bgcolor="#252930",
           margin={'l':1,'r':1,'t':1,'b':1},
           xaxis=dict(
-              title= xaxis_title,
-              range = [xrange[0],xrange[1]],
-              dtick = xtick),
+             title= xaxis_title,
+             range = [xrange[0],xrange[1]],
+             dtick = xtick),
           legend=dict(
             x=0.01,
             y=1.03,
