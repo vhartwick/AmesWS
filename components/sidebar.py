@@ -119,7 +119,7 @@ def Sidebar():
                        {'label': 'Magma', 'value': 'magma'},
                        {'label': 'Red/Blue', 'value': 'RdBu_r'},
                     ],
-                 style={"backgroundColor":"#252930"}, value='Oryel'),
+                 style={"backgroundColor":"#252930"}, value='None'),
                  html.P("Contour Color Map",id="cmap-dropdown-txt"),
 
                  dcc.Input(id="clev-input",value='DEFAULT', type='text'),
