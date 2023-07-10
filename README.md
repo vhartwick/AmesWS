@@ -20,8 +20,8 @@ Download Instructions:
 4. Create a Local Data Directory & Download Data from NAS 
 ```
         mkdir amesWS/Data/sim1
-        Sample Data Files are located in a shared directory on NAS
-        /u/mkahre/MCMC/tmp/4victoria/C48_L30_MY34/
+        Sample Data Files are located in a shared directory on NAS (for now just testing with atmos_average)
+        /u/mkahre/MCMC/tmp/4victoria/C48_L30_MY34/02004.atmos_average_extract_*.nc
 ```
 4. Change the File Paths to Your Data
 ```

@@ -16,29 +16,35 @@ def fv3_data():
    return df
 
 
-def file_path(model_input,tod_input,vcords_input):
-  if tod_input != 'ALL':  # load atmos_diurn
-     if vcords_input == "pstd" : # load atmos_average_pstd
-       f_path = f'/Users/vhartwic/Desktop/amesWS/{model_input}/Data/00668.atmos_diurn_T_pstd.nc'
-     elif vcords_input == "zagl":  # load atmos_average_zagl
-       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_diurn_T_zagl.nc'
+def file_path(model_input,plot_input,tod_input,vcords_input):
+  if tod_input != 'ALL' and plot_input != '1D_daily':  # load atmos_diurn
+     if vcords_input == "pstd" : # load pstd
+       f_path = f'/Users/vhartwic/Desktop/amesWS/{model_input}/Data/02004.atmos_diurn_T_pstd.nc'
+     elif vcords_input == "zagl":  # load zagl
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_diurn_T_zagl.nc'
      else:  # load atmos_average_zstd
-       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_diurn_T_zstd.nc'
-
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_diurn_T_zstd.nc'
+  elif plot_input == '1D_daily':  # load atmos_daily
+     if vcords_input == "pstd" : 
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_daily_extract.nc'
+     elif vcords_input == "zagl":  # load zagl
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_daily_extract.nc'
+     else:  # load atmos_average_zstd
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_daily_extract.nc'
   else: # load atmos_average
      if vcords_input == "pstd" : # load atmos_average_pstd
-       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_average_pstd.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_average_extract_pstd.nc'
      elif vcords_input == "zagl":  # load atmos_average_zagl
-       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_average_zagl.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_average_extract_zagl.nc'
      else:  # load atmos_average_zstd
-       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/00668.atmos_average_zstd.nc'
+       f_path = f'/Users/vhartwic/Desktop/amesWS/Data/{model_input}/02004.atmos_average_extract_zstd.nc'
   
   return f_path
 
 def load_dims(model_input,plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
-  # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(model_input,tod_input,vcords_input)
+  # SPECIFY FILE PATH BASED ON MODEL_INPUT, TOD_INPUT, PLOT_INPUT, VCORDS_INPUT
+  f_path = file_path(model_input,plot_input,tod_input,vcords_input)
 
   # LOAD DATA
   # order : plot_input, array dimensions, specified lat,lon,lev,areo
@@ -60,8 +66,8 @@ def load_dims(model_input,plot_input,var_input,vcords_input,areo_input,lat_input
 
 def load_data(model_input,plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
-  # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(model_input,tod_input,vcords_input)
+  # SPECIFY FILE PATH BASED ON MODEL_INPUT, PLOT_INPUT, TOD_INPUT, VCORDS_INPUT
+  f_path = file_path(model_input,plot_input,tod_input,vcords_input)
 
   # LOAD DATA
   # order : plot_input, array dimensions, specified lat,lon,lev,areo
@@ -87,8 +93,8 @@ def load_data(model_input,plot_input,var_input,vcords_input,areo_input,lat_input
 def select_timeseries_hover_var(dv,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover):
 
     # FIRST LOAD DATA
-    # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-    f_path = file_path(model_input,tod_input,vcords_input)
+    # SPECIFY FILE PATH BASED ON MODEL_INPUT, PLOT_INPUT, TOD_INPUT, VCORDS_INPUT
+    f_path = file_path(model_input,plot_input,tod_input,vcords_input)
     
     # LOAD DATA   
     # reset saved variables
@@ -163,8 +169,8 @@ def select_timeseries_hover_var(dv,plot_input,var1_input,vcords_input,areo_input
 def select_vertical_profile_var(dv,plot_input,var1_input,model_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,dimx_hover,dimy_hover):
     
     # FIRST LOAD DATA
-    # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-    f_path = file_path(model_input,tod_input,vcords_input)
+    # SPECIFY FILE PATH BASED ON MODEL_INPUT, PLOT_INPUT, TOD_INPUT, VCORDS_INPUT
+    f_path = file_path(model_input,plot_input, tod_input,vcords_input)
 
     # reset saved variables
     hover_var = []
@@ -396,8 +402,8 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
 
 def load_column_data(plot_input,var_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
-  # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-  f_path = file_path(model_input,tod_input,vcords_input)
+  # SPECIFY FILE PATH BASED ON MODEL_INPUT, PLOT_INPUT,TOD_INPUT, VCORDS_INPUT
+  f_path = file_path(model_input,plot_input, tod_input,vcords_input)
 
   # LOAD DATA
   # order : plot_input, array dimensions, specified lat,lon,lev,areo

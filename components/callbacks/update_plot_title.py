@@ -32,7 +32,7 @@ dp = df.plotting_options()
 def fig_title(fig,plot_input,model_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
     # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
-    f_path = cf.file_path(model_input,tod_input,vcords_input)
+    f_path = cf.file_path(model_input,plot_input,tod_input,vcords_input)
     
     text_options = [['Zonal Average', ''],
                    ['Meridional Average', ''],
