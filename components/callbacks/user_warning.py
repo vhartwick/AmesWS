@@ -117,13 +117,13 @@ def range_check(i, var_name, var_input, vcords_input):
    
    # replace elements of range_max, range_min and rem_list based on vcords_input (pstd is default)
    if "zstd" in str(vcords_input):
-      range_max[i] = 100
+      range_max[i] = 110000.
       range_min[i] = 0
-      rem_list[i] = "Altitude above the Reference Aeroid should be between 0 and 100km"
+      rem_list[i] = "Altitude above the Reference Aeroid should be between 0 and 110 km"
    elif "zagl" in str(vcords_input):
-      range_max[i] = 100
+      range_max[i] = 110000.
       range_min[i] = 0
-      rem_list[i] = "Altitude above the surface should be between 0 and 100 km"
+      rem_list[i] = "Altitude above the surface should be between 0 and 110 km"
    
    # Check that values are within expected range
    range_error_message = rem_list[i]          

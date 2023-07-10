@@ -45,6 +45,10 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,model_inp
        vert_dim = json.loads(vert_dim_input)
        vert_dim = xr.DataArray.from_dict(vert_dim)
 
+       # change units of vert_dim to km if necesary
+       if vcords_input != 'pstd':
+          vert_dim = vert_dim/1000
+
        # Use hover data to select variable at x,y of hover
        dimx_hover = hoverData['points'][0]['x']
        dimy_hover = hoverData['points'][0]['y']
@@ -119,6 +123,14 @@ def update_vertical_profile(hoverData,plot_input,var1_input,var2_input,model_inp
               size=6,
               color='white')))
 
+       # change to linear axis if vertical coordinate is not Pa
+       if vcords_input != 'pstd':
+          fig.update_layout(
+             yaxis = dict(
+                type='linear',
+                range=[0,110],
+                autorange=True))
+       
        fig_visibility = {"display":"block"} 
        return fig, fig_visibility
 

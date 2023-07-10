@@ -108,7 +108,10 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
        dim1,dim2,var1 = json.loads(dim1),json.loads(dim2),json.loads(var1)
        dim1,dim2,var1 = xr.DataArray.from_dict(dim1),xr.DataArray.from_dict(dim2),xr.DataArray.from_dict(var1)
 
-
+       # if vertical coordinate is not pressure and dimy=lev, change from m to km
+       if "lev" in plot_input and vcords_input != 'pstd':
+          dim2 = dim2/1000
+      
        cbar_title = dv.loc[(dv['plot-type'] == plot_input) & (dv['variable'] == var1.name), 'label'].values[0]
        # Check for User Specifications for Contour Levels and Cmap
        if cmap_input != "None":
@@ -178,7 +181,11 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
 
        dim1,var1 = json.loads(dim1),json.loads(var1)
        dim1,var1 = xr.DataArray.from_dict(dim1),xr.DataArray.from_dict(var1)
-       
+     
+       # for zagl, zstd change vertical coordinate to km from m 
+       if vcords_input != 'pstd':
+          dim1 = dim1/1000
+
        # plot figure
        fig = go.Figure(data=go.Scatter(x=np.array(var1),y=np.array(dim1), xaxis='x1', name=var1.name,line=dict(color="#808ef2")))
        
@@ -239,6 +246,14 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
              type='log',
              tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
              autorange='reversed'))
+
+       if vcords_input != 'pstd':
+          fig.update_layout(
+             yaxis=dict(
+                title=dp.loc[(dp['dim']==vcords_input),'unit'].values[0],
+                type='linear',
+                tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
+                autorange='reversed'))
 
     else:  # 1D PLOT
 

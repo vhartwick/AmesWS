@@ -79,9 +79,9 @@ def var_data():
 def plotting_options():
 
    d = {'dim':['lon','lat','time','time_of_day_12','pstd','zstd','zagl'],
-        'range': [[0,360],[-90,90],[0,360],[0,24],[2.845,-2],[0,120],[0,120]],
+        'range': [[0,360],[-90,90],[0,360],[0,24],[2.845,-2],[0,110],[0,110]],
         'tick': [60,30,60,2,0.5,10,10],
-        'unit': ['[°E]', '[°N]', '[°Ls]','[LT]','[Pa]','[m]','[m]'],
+        'unit': ['[°E]', '[°N]', '[°Ls]','[LT]','[Pa]','[km]','[km]'],
        }
    dp = pd.DataFrame(data=d)
    return dp

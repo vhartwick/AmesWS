@@ -207,6 +207,10 @@ def select_vertical_profile_var(dv,plot_input,var1_input,model_input,vcords_inpu
           user_input = lon_input if i=='lon' \
             else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
 
+          # change vertical coordinate name based on user input
+          if i == 'lev':
+             i = vcords_input
+
           if user_input == 'ALL':
              if i != 'lat':
                 hover_var = hover_var.mean(i)
@@ -245,16 +249,23 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     dimy = dv.loc[(dv['plot-type']==plot_input),'dimy'].values[0]
 
     # CHANGE LEV TO PSTD, ZAGL OR ZSTD
-    if dimx=='lev':
-       dimx=vcords_input
-    if dimy=='lev':
-       dimy=vcords_input
+    #if dimx=='lev':
+    #   dimx=vcords_input
+    #if dimy=='lev':
+    #   dimy=vcords_input
        
     # CHECK DIMENSION USER INPUTS
     dim1_input = lon_input if dimx=='lon' \
          else (lat_input if dimx=='lat' else (areo_input if dimx=='time' else (lev_input if dimx=='lev' else tod_input)))
     dim2_input = lon_input if dimy=='lon' \
          else (lat_input if dimy=='lat' else (areo_input if dimy=='time' else (lev_input if dimy=='lev' else tod_input)))
+
+  
+    # CHANGE LEV TO PSTD, ZAGL OR ZSTD
+    if dimx=='lev':
+       dimx=vcords_input
+    if dimy=='lev': 
+       dimy=vcords_input
 
     # NOW FIND VARIABLE
     var = dv.loc[(dv['label']==str(var_input)),'variable'].values[0]  
@@ -317,21 +328,31 @@ def define_dims(f,dv,plot_input,lon_input,lat_input,areo_input,vcords_input,lev_
        dimy = dimx
 
     # CHANGE LEV TO PSTD, ZAGL OR ZSTD
-    if dimx=='lev':
-       dimx=vcords_input
-    if dimy=='lev': 
-       dimy=vcords_input
+    #if dimx=='lev':
+    #   dimx=vcords_input
+    #if dimy=='lev': 
+    #   dimy=vcords_input
        
     # LOOK AT RELEVANT USER RANGE INPUT & DEFINE DIMENSIONS
-    dim1,dim2 = f[dimx],f[dimy]
-    time_dim,vert_dim = f.time,f[vcords_input]
+    #dim1,dim2 = f[dimx],f[dimy]
+    #time_dim,vert_dim = f.time,f[vcords_input]
     
     # CHECK DIMENSION USER INPUTS
     dim1_input = lon_input if dimx=='lon' \
          else (lat_input if dimx=='lat' else (areo_input if dimx=='time' else (lev_input if dimx=='lev' else tod_input)))
     dim2_input = lon_input if dimy=='lon' \
          else (lat_input if dimy=='lat' else (areo_input if dimy=='time' else (lev_input if dimy=='lev' else tod_input)))
-       
+    
+    # CHANGE LEV TO PSTD, ZAGL OR ZSTD
+    if dimx=='lev':
+       dimx=vcords_input
+    if dimy=='lev':
+       dimy=vcords_input
+
+    # LOOK AT RELEVANT USER RANGE INPUT & DEFINE DIMENSIONS
+    dim1,dim2 = f[dimx],f[dimy]
+    time_dim,vert_dim = f.time,f[vcords_input]
+   
     if dim1_input !="ALL":
        dim_split = str(dim1_input).split(",")
        dim1 = dim1.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
