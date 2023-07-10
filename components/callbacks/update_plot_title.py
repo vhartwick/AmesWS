@@ -75,6 +75,12 @@ def fig_title(fig,plot_input,model_input,var1_input,vcords_input,areo_input,lat_
              dim = vcords_input
              with xr.open_dataset(f_path,decode_times=False) as f:
                 text += ['@ ' + text_options[dim_index][1]+f[dim].sel(**{dim:dim_split[0]},method='nearest').values+'-'+ f[dim].sel(**{dim:dim_split[1]},method='nearest').values + unit]
+          elif i == 'time':
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]]
+
           else:
              with xr.open_dataset(f_path,decode_times=False) as f:
                 nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
@@ -88,6 +94,12 @@ def fig_title(fig,plot_input,model_input,var1_input,vcords_input,areo_input,lat_
              with xr.open_dataset(f_path,decode_times=False) as f:
                 nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
                 text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit] 
+          elif i == 'time':
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value%360) + unit_options[dim_index]]
+
+
           else:
              with xr.open_dataset(f_path,decode_times=False) as f:
                 nearest_value=f[i].sel(**{i:user_input},method='nearest').values

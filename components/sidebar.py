@@ -93,7 +93,7 @@ def Sidebar():
                  dbc.Tooltip(target="tod-input-txt",id="tod-tooltip"),
                  dbc.Alert(id='tod-alert', color='danger', dismissable=True, is_open=False),
 
-                 dcc.Input(id="lev-input",value='100', type='text',
+                 dcc.Input(id="lev-input",value='ALL', type='text',
                      style={"display":"none"}),
                  html.P("Atmospheric Level", id='lev-input-txt',
                      style={"display":"none"}),

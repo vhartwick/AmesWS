@@ -51,10 +51,8 @@ def user_warning(lat_input,lon_input,ls_input,tod_input,vcords_input,lev_input,c
       var_longname = "Altitude"
    
    for i in range(len(var_list)):
-      
       # First check formattting
       alert_message[i],alert_is_open[i], button_status = format_check(plot_input,var_list[i],var_longname[i],input_list[i])
-  
    if any(alert_is_open): # checks if any formatting alerts are triggered
       return alert_message[0], alert_is_open[0], alert_message[1], alert_is_open[1], alert_message[2], alert_is_open[2], alert_message[3], alert_is_open[3], alert_message[4], alert_is_open[4], alert_message[5], alert_is_open[5], button_status
 
