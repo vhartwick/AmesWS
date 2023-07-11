@@ -64,7 +64,7 @@ def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vco
     if str(var3_input) != "None":
        var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
     
-    fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input)  
+    fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input,time_dim)  
     return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3
 
 
@@ -78,7 +78,7 @@ def blank_fig():
     
     return fig
 
-def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input):
+def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input,time_dim):
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -124,34 +124,39 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           zmin,zmax= min(float(dim_split[0]),float(dim_split[1])),max(float(dim_split[0]),float(dim_split[1]))
        else:
           zmin,zmax = None,None
+      
+       # Create initial heatmap trace
+       heatmap_trace = go.Heatmap(
+          z=var1[0, :, :].transpose(dim2.name,dim1.name),
+          x=dim1,
+          y=dim2,
+          zsmooth='best',
+          colorscale='Viridis',
+          zmin=zmin,
+          zmax=zmax,
+          name=var1.name,
+          colorbar=dict(title=cbar_title, titleside='right')
+       )
+       fig.add_trace(heatmap_trace)
+ 
+
+       # Create slider steps based on time values
+       slider_steps = []
+       for i in range(132):
+          slider_step = dict(
+             method='update',
+             args=[{'z': [var1[i,:, :].transpose(dim2.name,dim1.name)]}],
+             label=f'Aerocentric Longitude {time_dim[i]}'
+          )
+          slider_steps.append(slider_step)
        
-       #hover text
-       #hovertext = list()
-       #for yi, yy in enumerate(dim2):
-       #   hovertext.append(list())
-       #for xi, xx in enumerate(dim1):
-       #   hovertext[-1].append('dim1.name: {}<br />dim2.name: {}<br />var1.name: {}'.format(xx, yy, var1[yi][xi]))
-     
-       fig = go.Figure(data=go.Heatmap(z=var1.transpose(dim2.name,dim1.name),x=dim1, y=dim2, zsmooth='best',colorscale=cmap, zmin = zmin, zmax=zmax,name=var1.name,
-             colorbar=dict(title=cbar_title,
-                           titleside='right')))
-       if var2:
-          var2 = json.loads(var2)
-          var2 = xr.DataArray.from_dict(var2)
-          fig.add_trace(go.Contour(z=var2.transpose(dim2.name,dim1.name), x=dim1, y=dim2,name=var2.name,showscale=False,
-                         contours=dict(coloring='none',showlabels=True,start=zmin,end=zmax),
-                         line_width=2))       
-       else:
-          fig.add_trace(go.Contour(z=var1.transpose(dim2.name,dim1.name), x=dim1, y=dim2,showscale=False,
-                         contours=dict(coloring='none',showlabels=True),
-                         line_width=2))
-       # Make negative contours dashed
-       #min_z = np.min(z)
-       #contour_levels = fig['data'][0]['contours']['start']
-       #fig.update_traces(contours_coloring='lines', line_width=2,
-       #           line_dash=[(10 if level < min_z else 1) for level in contour_levels])
-       
+       # Add slider component to the figure
        fig.update_layout(
+          sliders=[dict(
+             active=0,
+             currentvalue= {'prefix': 'Time: '},
+             steps=slider_steps
+          )],
           #title=plot_title_input,
           #title_x=0.5,
           autosize=False,

@@ -286,7 +286,7 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"]
  
     # Then remove levels as necessary
-    rlist_var = [o for o in rlist_var if o not in ('lev2','lev3')]
+    rlist_var = [o for o in rlist_var if o not in ('time','lev2','lev3')]
 
     for i in rlist_var:    # i dimension name, dim_input = "all, int, or range"
 
