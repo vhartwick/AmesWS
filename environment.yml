@@ -1,4 +1,4 @@
-name: amesCS
+name: amesWS-env
 channels:
   - defaults
   - conda-forge
@@ -78,5 +78,5 @@ dependencies:
     - werkzeug==2.2.2
     - wheel==0.38.4
     - xarray==2022.11.0
-prefix: /Users/vhartwic/.conda/envs/amesCS
+prefix: /Users/vhartwic/.conda/envs/amesWS-env
 
