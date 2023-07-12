@@ -48,23 +48,23 @@ dp = df.plotting_options()
     prevent_initial_call=True,
 )
 
-def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,cmap_input,clev_input,plot_title_input):
+def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,cmap_input,clev_input,plot_title_input):
     
     # initialize variables
     var1, var2, var3 = None, None, None
 
     # Load data conditionally (based on 1D or 2D plot_input)
-    dim1, dim2, time_dim, vert_dim = cf.load_dims(model_input,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
+    dim1, dim2, time_dim, vert_dim = cf.load_dims(model_input,plot_input,var1_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
 
-    var1 = cf.load_data(model_input,plot_input,var1_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
+    var1 = cf.load_data(model_input,plot_input,var1_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
 
     if str(var2_input) != "None":
-       var2 = cf.load_data(model_input,plot_input,var2_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
+       var2 = cf.load_data(model_input,plot_input,var2_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
 
     if str(var3_input) != "None":
-       var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input)
+       var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
     
-    fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input)  
+    fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input,plot_title_input)  
     return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3
 
 
@@ -78,7 +78,7 @@ def blank_fig():
     
     return fig
 
-def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,areo_input,lat_input,lon_input,lev_input,tod_input,plot_title_input):
+def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input,plot_title_input):
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -177,7 +177,6 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           fig.update_yaxes(title=yaxis_column_name, range=[yrange[0],yrange[1]],dtick=ytick)
  
        # check that the user didn't specify dimx or dimy range (lat, lon, lev, areo, tod)
-       #print({globals()[f'{dim1.name}_input']})
        if locals()[f'{dim1.name}_input'] != 'ALL':
            xsplit =locals()[f'{dim1.name}_input'].split(",") 
            while np.abs(int(xsplit[0]) - int(xsplit[1])) / xtick < 3:  # make sure there are att least three ticks
@@ -191,7 +190,7 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
 
 
 
-    # 1D_LEV PLOT 
+    # 1D_LEV PLOT (separated out since dimension is on y axis) 
     elif plot_input == "1D_lev":   # 1D vertical profile
 
        dim1,var1 = json.loads(dim1),json.loads(var1)
@@ -270,6 +269,7 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
                 tickcolor='white',tickwidth=2, ticklen=10,ticks='inside',
                 autorange='reversed'))
 
+
     else:  # 1D PLOT
 
        dim1,var1 = json.loads(dim1),json.loads(var1)
@@ -338,7 +338,13 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
             font=dict(
               size=11,
               color='white')))
-      
+     
+       # check that the user didn't specify dimx or dimy range (lat, lon, lev, areo, tod)
+       if locals()[f'{dim1.name}_input'] != 'ALL':
+           xsplit =locals()[f'{dim1.name}_input'].split(",")
+           while np.abs(int(xsplit[0]) - int(xsplit[1])) / xtick < 3:  # make sure there are att least three ticks
+              xtick = xtick / 2
+           fig.update_xaxes(range=[xsplit[0],xsplit[1]],dtick=xtick)
     return fig
  
 
