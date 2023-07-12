@@ -40,13 +40,30 @@
 .card_links {
    position: fixed;
    top: 30vh;
-   left:330px;
-   right:18vw;
+   left:50px;
+   right:50px;
    bottom: 10vh;
    color:black;
    overflow-y:scroll;
 }
 
+.card1 {
+   position: fixed;
+   top: 30vh;
+   width:330px;
+   bottom: 10vh;
+   color:black;
+   overflow-y:scroll;
+}
+.card2 {
+   position: fixed;
+   top: 30vh;
+   width:330px;
+   left:30vw;
+   bottom: 10vh;
+   color:black;
+   overflow-y:scroll;
+}
 .header {
    position: fixed;
    top: 0;

@@ -8,7 +8,7 @@ from dash.dependencies import Input, Output, State
 from index import app
 
 # Connect to your app pages
-from pages import home,analytics
+from pages import home,model,citation,analytics
 
 # Connect the header & navbar (which appear on all pages) to the index
 from components import header
@@ -50,6 +50,10 @@ def display_page(pathname):
        return home.layout
     if pathname == '/analytics':
         return analytics.layout
+    if pathname == '/model':
+        return model.layout
+    if pathname == '/citation':
+        return citation.layout
     else: # if redirected to unknown link
         return "404 Page Error! Please choose a link"
 

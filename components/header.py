@@ -21,8 +21,11 @@ def Header():
                                   style={"color": "#FCD7BC","font-family":"Helvetica Neue","letter-spacing":"10px"},
                                ), 
                            dbc.NavbarSimple([
+
                               dbc.NavItem(dbc.NavLink("Home", href="/home", style={"color":"white"})),
                               dbc.NavItem(dbc.NavLink("Analytics", href="/analytics", style={"color":"white"})),
+                              dbc.NavItem(dbc.NavLink("Model Description", href="/model", style={"color":"white"})),
+                              dbc.NavItem(dbc.NavLink("How to Cite", href="/citation", style={"color":"white"})),
                            ], color="#25293"),
 
 #                               html.P(
