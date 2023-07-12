@@ -111,7 +111,8 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
        # if vertical coordinate is not pressure and dimy=lev, change from m to km
        if "lev" in plot_input and vcords_input != 'pstd':
           dim2 = dim2/1000
-      
+     
+       # specifications for colorbars & contour range 
        cbar_title = dv.loc[(dv['plot-type'] == plot_input) & (dv['variable'] == var1.name), 'label'].values[0]
        # Check for User Specifications for Contour Levels and Cmap
        if cmap_input != "None":
@@ -167,7 +168,6 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
 
        
        xrange,xtick = dp.loc[(dp['dim']==dim1.name),'range'].values[0],dp.loc[(dp['dim']==dim1.name),'tick'].values[0]
-       
        yrange,ytick = dp.loc[(dp['dim']==dim2.name),'range'].values[0],dp.loc[(dp['dim']==dim2.name),'tick'].values[0]
        fig.update_xaxes(title=xaxis_column_name,range=[xrange[0],xrange[1]],dtick=xtick)
 
@@ -176,6 +176,21 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
        else:
           fig.update_yaxes(title=yaxis_column_name, range=[yrange[0],yrange[1]],dtick=ytick)
  
+       # check that the user didn't specify dimx or dimy range (lat, lon, lev, areo, tod)
+       #print({globals()[f'{dim1.name}_input']})
+       if locals()[f'{dim1.name}_input'] != 'ALL':
+           xsplit =locals()[f'{dim1.name}_input'].split(",") 
+           while np.abs(int(xsplit[0]) - int(xsplit[1])) / xtick < 3:  # make sure there are att least three ticks
+              xtick = xtick / 2
+           fig.update_xaxes(range=[xsplit[0],xsplit[1]],dtick=xtick)
+       if locals()[f'{dim2.name}_input'] != 'ALL':
+           ysplit =locals()[f'{dim2.name}_input'].split(",")
+           while np.abs(int(ysplit[0]) - int(ysplit[1])) / ytick < 3:  # make sure there are att least three ticks
+              ytick = ytick / 2
+           fig.update_yaxes(range=[ysplit[0],ysplit[1]],dtick=ytick)
+
+
+
     # 1D_LEV PLOT 
     elif plot_input == "1D_lev":   # 1D vertical profile
 
