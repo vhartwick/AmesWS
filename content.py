@@ -26,8 +26,10 @@ from components.callbacks import update_plotting_options
 from components.callbacks import update_plot_title
 from components.callbacks import user_warning
 from components.callbacks import update_mainfig_size
+from components.callbacks import update_modal_text
+from components.callbacks import toggle_modal
 #from components.callbacks import reset_page
-from components import header, sidebar, graph_window, abar
+from components import footer, sidebar, graph_window, abar
 
 # define the components
 header = header.Header()

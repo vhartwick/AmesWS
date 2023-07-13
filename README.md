@@ -11,6 +11,13 @@ Download Instructions:
 ``` 
         cd /PATH/TO/DIRECTORY/amesWS
         conda env create -f environment.yml --name amesWS-env
+         
+          OR
+
+        python -m venv amesWS-env
+        source ameWS-env/bin/activate
+        pip install -r requirements.txt
+
 ```
 
 3. Activate Virtual Environment

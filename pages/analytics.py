@@ -21,13 +21,13 @@ from components.callbacks import update_plot_title
 from components.callbacks import user_warning
 from components.callbacks import user_warning
 from components.callbacks import update_mainfig_size
-from components import header, sidebar, graph_window, abar
+from components import footer, sidebar, graph_window, abar
 
 # define the components
-header = header.Header()
 sidebar = sidebar.Sidebar()
 graph_window = graph_window.Graph_Window()
 abar = abar.Abar()
+footer = footer.Footer()
 
-layout = html.Div([sidebar,graph_window,abar], style={'background_color':'#252930'})
+layout = html.Div([sidebar,graph_window,footer,abar], style={'background_color':'#252930'})
 #                sidebar,graph_window,abar], style={'background_color':'#252930'})
