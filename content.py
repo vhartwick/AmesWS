@@ -8,7 +8,7 @@ from dash.dependencies import Input, Output, State
 from index import app
 
 # Connect to your app pages
-from pages import home,model,citation,analytics
+from pages import home,model,citation,interface
 
 # Connect the header & navbar (which appear on all pages) to the index
 from components import header
@@ -50,8 +50,8 @@ app.config.suppress_callback_exceptions = True
 def display_page(pathname):
     if pathname == '/home' or pathname == '/':
        return home.layout
-    if pathname == '/analytics':
-        return analytics.layout
+    if pathname == '/interface':
+        return interface.layout
     if pathname == '/model':
         return model.layout
     if pathname == '/citation':
