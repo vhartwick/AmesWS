@@ -53,7 +53,7 @@
    width: 330px;
    bottom: 0vh;
    padding: 10px 20px;
-   overflow-y:scroll;
+   overflow-y:auto;
    color:white;
    background-color:#252930;
 }
@@ -67,7 +67,7 @@
    right: 10px;
    background-color:#252930;
    color:white;
-   overflow-y:scroll;
+   overflow-y:auto;
 }
 
 .graph_window {
@@ -77,7 +77,7 @@
    right:18vw;
    bottom: 10vh;
    #bottom: 23vh;
-   overflow-y:scroll;
+   overflow-y:auto;
    color:white;
    background-color:#252930;
    z-index:1;
