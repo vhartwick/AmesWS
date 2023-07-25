@@ -47,6 +47,16 @@
    background-color:#252930;
 }
 
+.footer {
+   position: fixed;
+   top: 90vh;
+   left:330px;
+   right:18vw;
+   bottom: 0;
+   padding: 1vw;
+   background-color:#252930;
+}
+
 .sidebar_vlh {
    position: fixed;
    top:25vh;
