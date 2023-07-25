@@ -44,5 +44,4 @@ def change_lev_vis(var1_input,plot_input,vcords_input):
         styles["lev-input"] = {"display": var1_display}
         styles["lev-input-txt"] = {"display": var1_display}
 
-    print(vcords_input, default_value)
     return default_value, styles["lev-input"], styles["lev-input-txt"]
