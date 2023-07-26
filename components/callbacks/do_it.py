@@ -186,12 +186,16 @@ def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,v
           fig.update_yaxes(title=yaxis_column_name, range=[yrange[0],yrange[1]],dtick=ytick)
  
        # check that the user didn't specify dimx or dimy range (lat, lon, lev, areo, tod)
+       # quickly rename pstd,zstd,zagl to lev
+       tmp_dim1name = 'lev' if dim1.name in ['pstd', 'zstd', 'zagl'] else dim1.name
+       tmp_dim2name = 'lev' if dim2.name in ['pstd', 'zstd', 'zagl'] else dim2.name
+
        if locals()[f'{dim1.name}_input'] != 'ALL':
-           xsplit =locals()[f'{dim1.name}_input'].split(",") 
+           xsplit =locals()[f'{tmp_dim1name}_input'].split(",") 
            while np.abs(int(xsplit[0]) - int(xsplit[1])) / xtick < 3:  # make sure there are att least three ticks
               xtick = xtick / 2
            fig.update_xaxes(range=[xsplit[0],xsplit[1]],dtick=xtick)
-       if locals()[f'{dim2.name}_input'] != 'ALL':
+       if locals()[f'{tmp_dim2name}_input'] != 'ALL':
            ysplit =locals()[f'{dim2.name}_input'].split(",")
            while np.abs(int(ysplit[0]) - int(ysplit[1])) / ytick < 3:  # make sure there are att least three ticks
               ytick = ytick / 2
@@ -400,7 +404,7 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
     # DESCRIPTION OF PLOT
     
     # intro text describing nearest value selection (varies with resolution)
-    nearest_value1,nearest_value2 = cf.find_nearest_value(f_path,'lat',"-30,30")
+    nearest_value1_samp,nearest_value2_samp = cf.find_nearest_value(f_path,'lat',"-30,30")
 
     # variable list
     var_value = var1_input 
@@ -422,18 +426,18 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
     # select options based on user input
     dimx = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'dimx'].values[0]
     dimy = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'dimy'].values[0]
-    rlist = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'rdims'].values[0]
+    rlist = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o not in [dimx, dimy] and not ('Surface' in var1_input and o == 'lev')]
+
     combined_list = rlist
     if var2_input is not None:
-       rlist2 = dv.loc[(dv['plot-type'] == plot_input) & (dv['label'] == str(var2_input)), 'rdims'].values[0]
+       rlist2 = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o not in [dimx, dimy] and not ('Surface' in var2_input and o == 'lev')] 
        combined_list = rlist + rlist2
     if var3_input is not None:
-       rlist3 = dv.loc[(dv['plot-type'] == plot_input) & (dv['label'] == str(var3_input)), 'rdims'].values[0]
+       rlist3 = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o not in [dimx, dimy] and not ('Surface' in var3_input and o == 'lev')] 
        combined_list = rlist + rlist2 + rlist3
-    
     rlist = list(set(combined_list))
     dlist = [dimx,dimy]
-
+    
     # go through rdmis assuming order lon,lat, lev, time, time_of_day_12
     text = []
  
@@ -474,9 +478,9 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
           dim = vcords_input if i == "lev" else i
           nearest_value1,nearest_value2 = cf.find_nearest_value(f_path,dim,user_input)
           if "," in user_input:   # range of values selected
-             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit
+             nval_options[f"{i}_value"] = f"{nearest_value1:.2f}-{nearest_value2:.2f}{unit}"
           else: # single value selected
-             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value1) + unit
+             nval_options[f"{i}_value"] = f"{text_options[dim_index][1]}{nearest_value1:.2f}{unit}"
 
     # now go through other user inputs (other than dimensions)
     for i in rlist:    # i dimension name, dim_input = "all, int, or range"
@@ -498,11 +502,11 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
           dim = vcords_input if i == "lev" else i
           nearest_value1,nearest_value2 = cf.find_nearest_value(f_path,dim,user_input)
           if "," in user_input:   # range of values selected
-             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1)+'-'+str(nearest_value2) + unit]
-             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit
+             text += [f'@ {text_options[dim_index][1]} {nearest_value1:.2f}-{nearest_value2:.2f}{unit}']
+             nval_options[f"{i}_value"] = f"{nearest_value1:.2f}-{nearest_value2:.2f}{unit}"
           else: # single value selected
-             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value1) + unit
-             text += ['@' + text_options[dim_index][1] + str(nearest_value1) + unit]
+             nval_options[f"{i}_value"] = f"{text_options[dim_index][1]}{nearest_value1:.2f}{unit}"
+             text += [f"@{text_options[dim_index][1]}{nearest_value1:.2f}{unit}"]
 
     # FORMAT PLOT TITLE
     # order options (average first, if more than one average combine)
@@ -514,7 +518,7 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
 
     # If both "Meridional Average" and "Zonal Average" appear, replace with "Global"
     # and move to start of string
-    if "Meridional Average" and "Zonal Average" in text:
+    if "Meridional Average" in text and "Zonal Average" in text:
        text = text.replace('Meridional Average ','')
        text = text.replace('Zonal Average','Global')
        # Find the index of "Global" & move to start of string
@@ -554,7 +558,7 @@ The model scenario has {simulation["spatial_resolution"]} degree spatial resolut
 
 {time_averaging}. {vertical_interpolation}. A full description of the model configuration and details of the physics can be found in Kahre+2023 and the NASA Ames FV3 User Manual.
 
-The plot/dataset shows the {plot_description} based on the following user inputs. Values listed represent the closest value in the model output. For example, if the user specifies the latitude range 30S,30N, the plot will show model data between {nearest_value1}S and {nearest_value2}N. 
+The plot/dataset shows the {plot_description} based on the following user inputs. Values listed represent the closest value in the model output. For example, if the user specifies the latitude range 30S,30N, the plot will show model data between {nearest_value1_samp}S and {nearest_value2_samp}N. 
 
 Simulation Name: NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}
 Variable(s): {var_value}

@@ -30,12 +30,6 @@ def var_data():
                  'Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]',
                  'Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]'],
 
-        'rdims':[['time','time_of_day_12'],['lon','time_of_day_12'],['lat','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lat','time'],['lon','lat','time'],
-                ['time','time_of_day_12'],['lon','time_of_day_12'],['lat','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lat','time'],['lon','lat','time'],
-                ['lev','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','time_of_day_12'],['lat','lev','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','time_of_day_12'],['lon','lev','time','time_of_day_12'],['lat','lev','time','time_of_day_12'],['lon','lat','time','time_of_day_12'],
-                ['lev','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','time_of_day_12'],['lat','lev','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','time_of_day_12'],['lon','lev','time','time_of_day_12'],['lat','lev','time','time_of_day_12'],['lon','lat','time','time_of_day_12'],
-                ['lev','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','time_of_day_12'],['lat','lev','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','time_of_day_12'],['lon','lev','time','time_of_day_12'],['lat','lev','time','time_of_day_12'],['lon','lat','time','time_of_day_12']],
-
         'dimx':['lon','time','time','time','lat','lon','time_of_day_12','time_of_day_12',
                 'lon','time','time','time','lat','lon','time_of_day_12','time_of_day_12',
                 'lon','lat','lon','time','time','time','time','lat','lon','lev',
@@ -85,12 +79,6 @@ def plotting_options():
        }
    dp = pd.DataFrame(data=d)
    return dp
-
-def variable_list():
-   variable_list = [['ts','ps','temp','ucomp','vcomp'],
-                    ['ts','ps'],
-                    ['temp','ucomp','vcomp']]
-   return variable_list
 
 def file_options():
    # Dictioray of Text Options for different file types

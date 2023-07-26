@@ -17,9 +17,6 @@ from pathlib import Path
 from dash import html, dcc
 
 # Load Variable Data
-variable_list = df.variable_list()
-
-# Load Variable Data
 dv = df.var_data()
 
 @app.callback(

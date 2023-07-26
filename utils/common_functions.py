@@ -110,6 +110,11 @@ def select_timeseries_hover_var(dv,plot_input,var1_input,vcords_input,areo_input
        dimx = dv.loc[(dv['plot-type']==plot_input),'dimx'].values[0]
        dimy = dv.loc[(dv['plot-type']==plot_input),'dimy'].values[0]
 
+       # MAKE LIST OF ADDITIONAL DIMENSIONS THAT MUST BE PROCESSED
+       rlist = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o not in [dimx, dimy]] 
+       # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
+       rlist = [o for o in rlist if o != 'time_of_day_12' and tod_input == "ALL"]
+
        # FOR LEV MAKE SOME ADDITIONAL CHECKS
        if 'lev' in str(dimy):
           dimy=vcords_input
@@ -121,14 +126,7 @@ def select_timeseries_hover_var(dv,plot_input,var1_input,vcords_input,areo_input
        hover_var_name = hover_var_name[1]
        hover_var = f[hover_var_name]       
       
-       # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
-       rlist = dv.loc[(dv['plot-type']==plot_input)&(dv['variable']==str(hover_var_name)),'rdims'].values[0]
-
-       # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
-       rlist = [o for o in rlist if o != 'time_of_day_12' and tod_input == "ALL"]
-       
-       # Then remove the second and third levels, time (because it is your x-axis) and rename lev to vcords
-       rlist = [o for o in rlist if o not in ('time','lev2','lev3')]
+       # rename lev to vcords in rlist
        rlist = [o.replace('lev', vcords_input) for o in rlist]
 
        for i in rlist:  # i dimension name, dim_input = "all, int, or range"
@@ -185,21 +183,16 @@ def select_vertical_profile_var(dv,plot_input,var1_input,model_input,vcords_inpu
        dimx = dv.loc[(dv['plot-type']==plot_input),'dimx'].values[0]
        dimy = dv.loc[(dv['plot-type']==plot_input),'dimy'].values[0]
 
+       # MAKE LIST OF ADDITIONAL DIMENSIONS THAT MUST BE PROCESSED
+       # lev is not included becasue it is your y-axis
+       rlist = [o for o in ['lon', 'lat', 'time', 'time_of_day_12'] if o not in [dimx, dimy]]
+       # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
+       rlist = [o for o in rlist if o != 'time_of_day_12' and tod_input == "ALL"]
+
        # GET VARIABLE NAME & EXTRACT
        hover_var_name = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'hover2'].values[0]
        hover_var_name = hover_var_name[1]
        hover_var = f[hover_var_name]
-
-       # LOOK AT REMAINING DIMENSIONS AND AVERAGE/SELECT BASED ON USER INPUTS
-       # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
-       rlist = dv.loc[(dv['plot-type']==plot_input)&(dv['variable']==str(hover_var_name)),'rdims'].values[0]
-
-       # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
-       rlist = [o for o in rlist if o != 'time_of_day_12' and tod_input == "ALL"]
-
-       # Then remove the second and third level, lev (because it is your y-axis) and rename lev to vcords
-       rlist = [o for o in rlist if o not in ('lev','lev2','lev3')]
-       rlist = [o.replace('lev', vcords_input) for o in rlist]
 
        for i in rlist:  # i dimension name, dim_input = "all, int, or range"
           
@@ -248,12 +241,12 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     dimx = dv.loc[(dv['plot-type']==plot_input),'dimx'].values[0]
     dimy = dv.loc[(dv['plot-type']==plot_input),'dimy'].values[0]
 
-    # CHANGE LEV TO PSTD, ZAGL OR ZSTD
-    #if dimx=='lev':
-    #   dimx=vcords_input
-    #if dimy=='lev':
-    #   dimy=vcords_input
-       
+    # MAKE LIST OF ADDITIONAL DIMENSIONS THAT MUST BE PROCESSED
+    rlist_var = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o not in [dimx, dimy] and not ('Surface' in var_input and o == 'lev')]
+    # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
+    rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"]
+ 
+
     # CHECK DIMENSION USER INPUTS
     dim1_input = lon_input if dimx=='lon' \
          else (lat_input if dimx=='lat' else (areo_input if dimx=='time' else (lev_input if dimx=='lev' else tod_input)))
@@ -278,15 +271,6 @@ def define_2D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     if dim2_input !="ALL":
        dim_split = str(dim2_input).split(",")
        var = var.sel(**{dimy:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-
-    # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
-    rlist_var = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var_input)),'rdims'].values[0]
-    
-    # remove tod dimension option if not in diurn file, and lev3 if plotting "2D"
-    rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"]
- 
-    # Then remove levels as necessary
-    rlist_var = [o for o in rlist_var if o not in ('lev2','lev3')]
 
     for i in rlist_var:    # i dimension name, dim_input = "all, int, or range"
 
@@ -368,6 +352,11 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
     # FIND DIMENSION NAME
     dimx = dv.loc[(dv['plot-type']==plot_input),'dimx'].values[0]
 
+    # MAKE LIST OF ADDITIONAL DIMENSIONS THAT MUST BE PROCESSED
+    rlist_var = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o !=dimx and not ('Surface' in var_input and o == 'lev')]
+    # remove tod dimension option if not in diurn file
+    rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"]
+
     # CHANGE LEV TO PSTD, ZAGL OR ZSTD
     if dimx=='lev':
        dimx=vcords_input
@@ -384,15 +373,6 @@ def define_1D(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcords_in
        dim_split = str(dim1_input).split(",")
        var = var.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
 
-    # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
-    rlist_var = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var_input)),'rdims'].values[0]
-    
-    # remove time-of_day_12 if tod_input != ALL
-    rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"] # remove tod
-  
-    ## FIX!!!!
-    # remove other levels
-    rlist_var = [o for o in rlist_var if o not in ('lev2','lev3')]
     for i in rlist_var:    # i dimension name, dim_input = "all, int, or range"
       
        user_input = lon_input if i=='lon' \
@@ -452,6 +432,11 @@ def define_1D_col(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcord
     dimx = dv.loc[(dv['plot-type']==plot_input),'dimx'].values[0] 
     dimy = 'lev'
 
+    # MAKE LIST OF ADDITIONAL DIMENSIONS THAT MUST BE PROCESSED
+    rlist_var = [o for o in ['lon', 'lat', 'lev', 'time', 'time_of_day_12'] if o not in [dimx,dimy] and not ('Surface' in var_input and o == 'lev')]
+    # remove tod dimension option if not in diurn file
+    rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"]
+    
     # CHANGE LEV TO PSTD, ZAGL OR ZSTD
     if dimx=='lev':
        dimx=vcords_input
@@ -467,16 +452,6 @@ def define_1D_col(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcord
     if dim1_input !="ALL":
        dim_split = str(dim1_input).split(",")
        var = var.sel(**{dimx:slice(min(int(dim_split[0]),int(dim_split[1])),max(int(dim_split[0]),int(dim_split[1])))})
-
-    # CHECK OTHER INPUTS & REDUCE ARRAY TO 2DIMS
-    rlist_var = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var_input)),'rdims'].values[0]
-    
-    # remove time-of_day_12 if tod_input != ALL
-    rlist_var = [o for o in rlist_var if o != 'time_of_day_12' and tod_input == "ALL"] # remove tod
-  
-    ## FIX!!!!
-    # remove other levels
-    rlist_var = [o for o in rlist_var if o not in ('lev2','lev3')]
 
     for i in rlist_var:    # i dimension name, dim_input = "all, int, or range"
 
@@ -512,18 +487,19 @@ def find_nearest_value(f_path,i,user_input):
   
    # range of values selected
    if "," in user_input:   # range of values selected
-          dim_split = str(user_input).split(",")
-          with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
-                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
-  
+      dim_split = str(user_input).split(",")
+      with xr.open_dataset(f_path,decode_times=False) as f:
+         # REPLACE TIME COORD WITH AREO
+         areo_coord = np.array(f.areo[:,0]%360)
+         f.coords['time'] = areo_coord    
+         nearest_value1 = f[i].sel(**{i:dim_split[0]}, method='nearest').values
+         nearest_value2 = f[i].sel(**{i:dim_split[1]}, method='nearest').values
    # single value selected
    else:
       with xr.open_dataset(f_path,decode_times=False) as f:
+         # REPLACE TIME COORD WITH AREO
+         areo_coord = np.array(f.areo[:,0]%360)
+         f.coords['time'] = areo_coord
          nearest_value1=f[i].sel(**{i:user_input},method='nearest').values
 
-   # modify based on coordinate type
-   if i == "time":     # divide by 360 so Ls ranges from 0-360
-      nearest_value1, nearest_value2 = nearest_value1%360, nearest_value2%360
-   
    return nearest_value1, nearest_value2
