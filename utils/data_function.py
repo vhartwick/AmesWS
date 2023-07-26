@@ -96,7 +96,7 @@ def file_options():
    # Dictioray of Text Options for different file types
    file_options = {
         "sim1": {
-           "name": "Data Release 1, (c) Kahre+2023 (link)",
+           "name": "Data Release 1 (c) Kahre+2023",
            "spatial_resolution": "2x2",
            "vertical_resolution": "56",
            "vertical_grid":"sigma hybrid pressure grid",
@@ -105,10 +105,10 @@ def file_options():
            "aerosol_scenario":"Description of tracers",
            "rt_scenario": "Description of RT",
         },
-        "atmos_ave": "Model results are averaged over 5 sols.",
-        "atmos_diurn": " Model results are averaged over 5 sols in 1 hour increments.",
-        "atmos_daily": "No temporal averaging is performed on model output.",
-        "pstd": "Vertical interpolation to a 48 level pressure grid was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
-        "zagl": "Vertical interpolation to a X level altitude grid [m] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
-        "zstd": "Vertical interpolation to a X level altitude grid [m] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing."}
+        "atmos_ave": "Model results are averaged over 5 sols",
+        "atmos_diurn": " Model results are averaged over 5 sols and discretized into 2 hour increments",
+        "atmos_daily": "No temporal averaging is performed on model output",
+        "pstd": 'Vertical interpolation to a 44 level pressure grid [1000-0.00001Pa] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing',
+        "zagl": "Vertical interpolation to a 42 level altitude grid [0-13km] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
+        "zstd": "Vertical interpolation to a 48 level altitude grid [-7.5-13km] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing."}
    return file_options

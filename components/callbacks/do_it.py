@@ -14,6 +14,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import json
+import re
 from pathlib import Path
 
 # Load Variable Data
@@ -379,6 +380,7 @@ def create_vertical_profile(plot_input,vertical_profile_var,vert_dim,hv_min,hv_m
 
        return fig
 
+# GENERATE TEXT TO DESCRIBE FIGURE, DISPLAY TITLE & COPY FOR README
 def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
 
     # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
@@ -398,12 +400,8 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
     # DESCRIPTION OF PLOT
     
     # intro text describing nearest value selection (varies with resolution)
-    with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value1=f.lat.sel(lat=-30,method='nearest').values
-                nearest_value2=f.lat.sel(lat=30,method='nearest').values
+    nearest_value1,nearest_value2 = cf.find_nearest_value(f_path,'lat',"-30,30")
 
-    # find the nearest values to user inputs and generate the plot title
-    
     # variable list
     var_value = var1_input 
     if var2_input is not None:
@@ -451,58 +449,42 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
     text += [var_value_title]
     
     nval_options = {
-       "lat_value":"",
-       "lon_value":"",
-       "lev_value":"",
-       "time_value":"",
-       "time_of_day_12_value":""}
+       "lat_value":"ALL",
+       "lon_value":"ALL",
+       "lev_value":"Surface",
+       "time_value":"ALL",
+       "time_of_day_12_value":"ALL"}
 
     for i in dlist:
+       
+       # quickly identify tthe unit based each coordinate (using unit_options)
        dim_index = 0 if i=='lon' \
           else (1 if i=='lat' else (3 if i=='time' else (2 if i=='lev' else 4)))
+       unit = unit_options[dim_index] if i != 'lev' else ('Pa' if vcords_input == 'pstd' else 'm')
 
-       # grab user input for each extra dimension
+       # grab user input for each dimension
        user_input = lon_input if i=='lon' \
           else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
 
        if user_input == 'ALL':
-          nval_options[f"{i}_value"]="All"
+          nval_options[f"{i}_value"]="ALL"
 
-       elif "," in user_input:   # range of values selected
-          dim_split = str(user_input).split(",")
-          if i == 'time':
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
-                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
-             nval_options[f"{i}_value"] = str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]
-          else:
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
-                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
-             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]
-       else: # single value selected
-          # check for unit
-          if i == 'lev':
-             unit = 'Pa' if vcords_input == 'pstd' else 'm'
-             dim = vcords_input
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
-             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value) + unit
-          elif i == 'time':
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
-             nval_options[f"{i}_value"] = str(nearest_value%360) + unit_options[dim_index]
-          else:
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
-             nval_options[f"{i}_value"] = str(nearest_value) + unit_options[dim_index]
+       else:
+          # set dimension name based on i or (for vertical level) vcords_input
+          dim = vcords_input if i == "lev" else i
+          nearest_value1,nearest_value2 = cf.find_nearest_value(f_path,dim,user_input)
+          if "," in user_input:   # range of values selected
+             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit
+          else: # single value selected
+             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value1) + unit
 
     # now go through other user inputs (other than dimensions)
     for i in rlist:    # i dimension name, dim_input = "all, int, or range"
 
-       # check dimension and go to appropriate option in text_options (e.g. lon == index[0])   
+       # quickly identify tthe unit based each coordinate (using unit_options)
        dim_index = 0 if i=='lon' \
           else (1 if i=='lat' else (3 if i=='time' else (2 if i=='lev' else 4)))
+       unit = unit_options[dim_index] if i != 'lev' else ('Pa' if vcords_input == 'pstd' else 'm')
 
        # grab user input for each extra dimension
        user_input = lon_input if i=='lon' \
@@ -510,43 +492,19 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
 
        if user_input == 'ALL':
           text += [text_options[dim_index][0]]
-          nval_options[f"{i}_value"]="All"
+          nval_options[f"{i}_value"]=text_options[dim_index][0]
 
-       elif "," in user_input:   # range of values selected
-          dim_split = str(user_input).split(",")
-          if i == 'time':
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
-                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
-             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]]
-             nval_options[f"{i}_value"] = str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]
-          else:
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
-                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+       else:
+          dim = vcords_input if i == "lev" else i
+          nearest_value1,nearest_value2 = cf.find_nearest_value(f_path,dim,user_input)
+          if "," in user_input:   # range of values selected
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1)+'-'+str(nearest_value2) + unit]
+             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit
+          else: # single value selected
+             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value1) + unit
+             text += ['@' + text_options[dim_index][1] + str(nearest_value1) + unit]
 
-             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]]
-             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]
-       else: # single value selected
-          # check for unit
-          if i == 'lev':
-             unit = 'Pa' if vcords_input == 'pstd' else 'm'
-             dim = vcords_input
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
-             text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit]
-             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value) + unit
-          elif i == 'time':
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
-             text += ['@ ' + text_options[dim_index][1]+str(nearest_value%360) + unit_options[dim_index]]
-             nval_options[f"{i}_value"] = str(nearest_value%360) + unit_options[dim_index]
-          else:
-             with xr.open_dataset(f_path,decode_times=False) as f:
-                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
-             text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit_options[dim_index]]
-             nval_options[f"{i}_value"] = str(nearest_value) + unit_options[dim_index]
-
+    # FORMAT PLOT TITLE
     # order options (average first, if more than one average combine)
     #e.g. Global Diurnal Average @ X Pa
     text = sorted(text, key=lambda x: 'Average' in x, reverse=True)
@@ -555,9 +513,13 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
     text = ' '.join(text)
 
     # If both "Meridional Average" and "Zonal Average" appear, replace with "Global"
+    # and move to start of string
     if "Meridional Average" and "Zonal Average" in text:
        text = text.replace('Meridional Average ','')
        text = text.replace('Zonal Average','Global')
+       # Find the index of "Global" & move to start of string
+       global_index = text.find("Global")
+       text = "Global " + text[:global_index] + text[global_index + len("global"):]
 
     # If the word "Average" appears more than once, remove the first instance
     num_averages = text.count("Average")  # Count the number of occurrences of "Average"
@@ -570,16 +532,29 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
        parts = text.split('@', 1)  # split the string at the first "@" character
        text = parts[0]+'@' + parts[1].replace('@', '')  # join the parts back together, keeping only the first "@"
     
-    plot_title = text
-    plot_title_lower = plot_title.lower()
+    # format case of title & descripton
+    plot_title = text.title()
+    # Define a regular expression pattern to match the content inside square brackets
+    pattern = r'\[.*?\]'
+    # Find all occurrences of the pattern in the string
+    matches = re.findall(pattern, text)
+    # Replace the content inside the brackets with a placeholder (e.g., '###')
+    lowercased_string = re.sub(pattern, '###', text.lower())
+    # Restore the original content inside the brackets
+    for match in matches:
+       plot_description = lowercased_string.replace('###', match, 1)
+
+    # GENERATE TEXT FOR POP-UP/README
+    last_slash_index = f_path.rfind('/')
+    file_name = f_path[last_slash_index + 1:]
   
-    final_txt = f'''This plot was generated using data from the NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}. The full data is archived on the NASA Planetary Science (?) Data Portal and can be accessed and downloaded at the following link.
+    final_txt = f'''This plot was generated using data from the NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}. The full data is archived on the NASA Planetary Science (?) Data Portal and can be accessed and downloaded at the link below.
 
-The model scenario has {simulation["spatial_resolution"]} degree lat/lon resolution with {simulation["vertical_resolution"]} vertical layers on a {simulation["vertical_grid"]}, and includes {simulation["dust_scenario"]}. {simulation["water_scenario"]}. {simulation["aerosol_scenario"]}. {simulation["rt_scenario"]}.
+The model scenario has {simulation["spatial_resolution"]} degree spatial resolution with {simulation["vertical_resolution"]} vertical layers on a {simulation["vertical_grid"]}, and includes {simulation["dust_scenario"]}. {simulation["water_scenario"]}. {simulation["aerosol_scenario"]}. {simulation["rt_scenario"]}.
 
-{time_averaging}. {vertical_interpolation}. A full description of the model configuration and details of the physics can be found in Kahre+2023 and the NASA Ames FV3 User Manual (link).
+{time_averaging}. {vertical_interpolation}. A full description of the model configuration and details of the physics can be found in Kahre+2023 and the NASA Ames FV3 User Manual.
 
-The plot/dataset shows the {plot_title_lower} based on the following user inputs. Values listed represent the closest value in the model output. For example, if the user specified the latitude range 30S,30N, the plot will use model data between {nearest_value1}S and {nearest_value2}N. 
+The plot/dataset shows the {plot_description} based on the following user inputs. Values listed represent the closest value in the model output. For example, if the user specifies the latitude range 30S,30N, the plot will show model data between {nearest_value1}S and {nearest_value2}N. 
 
 Simulation Name: NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}
 Variable(s): {var_value}
@@ -588,9 +563,8 @@ Longitude: {nval_options["lon_value"]}
 Atmospheric Level: {nval_options["lev_value"]}
 Solar Longitude (Ls): {nval_options["time_value"]}
 Local Time: {nval_options["time_of_day_12_value"]}
-File Name: {f_path}'''
+File Name: {file_name}'''
 
- 
     return html.Pre(final_txt, className='pre-style'), plot_title
 
 

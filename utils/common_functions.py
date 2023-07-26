@@ -506,4 +506,24 @@ def define_1D_col(f,dv,var_input,plot_input,lon_input,lat_input,areo_input,vcord
    
     return var
 
+def find_nearest_value(f_path,i,user_input):
 
+   nearest_value1, nearest_value2 = None, None 
+  
+   # range of values selected
+   if "," in user_input:   # range of values selected
+          dim_split = str(user_input).split(",")
+          with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+  
+   # single value selected
+   else:
+      with xr.open_dataset(f_path,decode_times=False) as f:
+         nearest_value1=f[i].sel(**{i:user_input},method='nearest').values
+
+   # modify based on coordinate type
+   if i == "time":     # divide by 360 so Ls ranges from 0-360
+      nearest_value1, nearest_value2 = nearest_value1%360, nearest_value2%360
+   
+   return nearest_value1, nearest_value2

@@ -27,19 +27,16 @@ def change_lev_vis(var1_input,plot_input,vcords_input):
         "lev-input": {"display": "none"},
         "lev-input-txt": {"display": "none"},
     }
+   
+    if "lev" not in plot_input:
+       # set default atmospheric level
+       default_value = '50' if vcords_input == 'pstd' else '25000'
+
     if "2D" in plot_input and "lev" not in plot_input:
-        if vcords_input == 'pstd':   # set default atmospheric level if vertical coordinate is pressure
-           default_value = '100'
-        else:			     # set default attmospheric level if vertical coordinate is altitude
-           default_value = '50000'     
         var1_display = "block" if str(var1_input) != "None" and "Surface" not in str(var1_input) else "none"
         styles["lev-input"] = {"display": var1_display}
         styles["lev-input-txt"] = {"display": var1_display}
     elif "1D" in plot_input and "lev" not in plot_input:
-        if vcords_input == 'pstd':   # set default atmospheric level if vertical coordinate is pressure
-           default_value = '100'
-        else:                        # set default attmospheric level if vertical coordinate is altitude
-           default_value = '50000'    
         var1_display = "block" if str(var1_input) != "None" and "Surface" not in str(var1_input) else "none"
         styles["lev-input"] = {"display": var1_display}
         styles["lev-input-txt"] = {"display": var1_display}
