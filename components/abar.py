@@ -34,7 +34,7 @@ def Abar():
              
              html.Div([
                  dbc.Button("Download Data", id="btn-download",
-                    style=BUTTON_STYLE,className="d-grid gap-2"),
+                    disabled=True,style=BUTTON_STYLE,className="d-grid gap-2"),
                  dcc.Download(id="download-fig"),
              ]),
 

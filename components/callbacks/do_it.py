@@ -36,7 +36,8 @@ file_options = df.file_options()
     Output("var2-sav", "data"),
     Output("var3-sav", "data"),
     Output("fig-title","children"),
-    Output("modal-txt","children")],
+    Output("modal-txt","children"),
+    Output("btn-download","disabled")],
     Input("btn-doit-txt","n_clicks"),
     [State("model-dropdown", "value"),
     State("plot-type-dropdown", "value"),
@@ -74,7 +75,7 @@ def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vco
     modal_text,plot_title = user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
     
     fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input)  
-    return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3, plot_title, modal_text
+    return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3, plot_title, modal_text, False
 
 
 def blank_fig():
