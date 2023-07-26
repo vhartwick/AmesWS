@@ -57,6 +57,17 @@
    background-color:#252930;
 }
 
+.pre-style {
+    font-family: 'Roboto', sans-serif; /* Replace with your desired font */
+    font-size: 14px; /* Adjust font size as needed */
+    line-height: 1.5; /* Adjust line height as needed */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #212529; /* Match text color with Lux theme dark color */
+    max-height: 300px; /* Set a maximum height for the Pre element */
+    overflow: auto; /* Add scrollbars when content exceeds the maximum height */
+}
+
 .sidebar_vlh {
    position: fixed;
    top:25vh;

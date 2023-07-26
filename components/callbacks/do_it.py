@@ -3,6 +3,7 @@
 #================================================================================
 from index import app
 from components.sidebar import Sidebar
+from dash import html
 from dash.dependencies import Input, Output, State
 from utils import common_functions as cf
 from utils import data_function as df
@@ -21,6 +22,9 @@ dv = df.var_data()
 # Load Plotting Options
 dp = df.plotting_options()
 
+# Load File Options Dictionary
+file_options = df.file_options()
+
 @app.callback(
     [Output("figure_out","figure"),
     Output("dim1-sav", "data"),
@@ -29,7 +33,9 @@ dp = df.plotting_options()
     Output("vert-dim-sav","data"),
     Output("var1-sav", "data"),
     Output("var2-sav", "data"),
-    Output("var3-sav", "data")],
+    Output("var3-sav", "data"),
+    Output("fig-title","children"),
+    Output("modal-txt","children")],
     Input("btn-doit-txt","n_clicks"),
     [State("model-dropdown", "value"),
     State("plot-type-dropdown", "value"),
@@ -43,12 +49,11 @@ dp = df.plotting_options()
     State("lev-input", "value"),
     State("tod-input", "value"),
     State("cmap-dropdown", "value"),
-    State("clev-input", "value"),
-    State("fig-title","children")],
+    State("clev-input", "value")],
     prevent_initial_call=True,
 )
 
-def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,cmap_input,clev_input,plot_title_input):
+def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input,cmap_input,clev_input):
     
     # initialize variables
     var1, var2, var3 = None, None, None
@@ -64,8 +69,11 @@ def do_it(btn_clicks,model_input,plot_input,var1_input,var2_input,var3_input,vco
     if str(var3_input) != "None":
        var3 = cf.load_data(model_input,plot_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
     
-    fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input,plot_title_input)  
-    return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3
+    # output figure information and title
+    modal_text,plot_title = user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcords_input,time_input,lat_input,lon_input,lev_input,tod_input)
+    
+    fig = plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input)  
+    return fig, dim1, dim2, time_dim, vert_dim, var1, var2, var3, plot_title, modal_text
 
 
 def blank_fig():
@@ -78,7 +86,7 @@ def blank_fig():
     
     return fig
 
-def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input,plot_title_input):
+def plot_it(plot_input,cmap_input,clev_input,var1_input,vcords_input,var1,var2,var3,dim1,dim2,time_input,lat_input,lon_input,lev_input,tod_input):
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -370,4 +378,219 @@ def create_vertical_profile(plot_input,vertical_profile_var,vert_dim,hv_min,hv_m
        fig.update_yaxes(title=yaxis_column_name,type='log', autorange='reversed')
 
        return fig
+
+def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input):
+
+    # SPECIFY FILE PATH BASED ON TOD_INPUT, VCORDS_INPUT
+    f_path = cf.file_path(model_input,plot_input,tod_input,vcords_input)
+    
+    # DESCRIPTION OF FILE 
+    # Select file description text from dictionary
+    simulation = file_options[model_input]
+    if "atmos_ave" in f_path:
+       time_averaging = file_options["atmos_ave"]
+    elif "atmos_diurn" in f_path:
+       time_averaging = file_options["atmos_diurn"]
+    else:
+       time_averaging = file_options["atmos_daily"]
+    vertical_interpolation = file_options[vcords_input]
+
+    # DESCRIPTION OF PLOT
+    
+    # intro text describing nearest value selection (varies with resolution)
+    with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f.lat.sel(lat=-30,method='nearest').values
+                nearest_value2=f.lat.sel(lat=30,method='nearest').values
+
+    # find the nearest values to user inputs and generate the plot title
+    
+    # variable list
+    var_value = var1_input 
+    if var2_input is not None:
+       var_value += ', ' + var2_input
+    if var3_input is not None:
+       var_value += ', ' + var3_input
+
+    # PLOT TITLE
+    text_options = [['Zonal Average', ''],
+                   ['Meridional Average', ''],
+                   ['Column Integrated', ''], 
+                   ['Annual Average', ''],
+                   ['Diurnal Average', '']]
+
+    unit_options = ['E','N','','Ls','LT']
+
+      
+    # select options based on user input
+    dimx = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'dimx'].values[0]
+    dimy = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'dimy'].values[0]
+    rlist = dv.loc[(dv['plot-type']==plot_input)&(dv['label']==str(var1_input)),'rdims'].values[0]
+    combined_list = rlist
+    if var2_input is not None:
+       rlist2 = dv.loc[(dv['plot-type'] == plot_input) & (dv['label'] == str(var2_input)), 'rdims'].values[0]
+       combined_list = rlist + rlist2
+    if var3_input is not None:
+       rlist3 = dv.loc[(dv['plot-type'] == plot_input) & (dv['label'] == str(var3_input)), 'rdims'].values[0]
+       combined_list = rlist + rlist2 + rlist3
+    
+    rlist = list(set(combined_list))
+    dlist = [dimx,dimy]
+
+    # go through rdmis assuming order lon,lat, lev, time, time_of_day_12
+    text = []
+ 
+    # first add variable names
+    if "," in var_value:
+       # Find the index of the last comma
+       last_comma_index = var_value.rfind(',')
+
+       # Reconstruct the modified var_value with the last comma replaced by an ampersand
+       var_value_title = var_value[:last_comma_index] + ' &' + var_value[last_comma_index+1:]
+    else:
+       var_value_title = var_value
+    text += [var_value_title]
+    
+    nval_options = {
+       "lat_value":"",
+       "lon_value":"",
+       "lev_value":"",
+       "time_value":"",
+       "time_of_day_12_value":""}
+
+    for i in dlist:
+       dim_index = 0 if i=='lon' \
+          else (1 if i=='lat' else (3 if i=='time' else (2 if i=='lev' else 4)))
+
+       # grab user input for each extra dimension
+       user_input = lon_input if i=='lon' \
+          else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
+
+       if user_input == 'ALL':
+          nval_options[f"{i}_value"]="All"
+
+       elif "," in user_input:   # range of values selected
+          dim_split = str(user_input).split(",")
+          if i == 'time':
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+             nval_options[f"{i}_value"] = str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]
+          else:
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]
+       else: # single value selected
+          # check for unit
+          if i == 'lev':
+             unit = 'Pa' if vcords_input == 'pstd' else 'm'
+             dim = vcords_input
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
+             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value) + unit
+          elif i == 'time':
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
+             nval_options[f"{i}_value"] = str(nearest_value%360) + unit_options[dim_index]
+          else:
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
+             nval_options[f"{i}_value"] = str(nearest_value) + unit_options[dim_index]
+
+    # now go through other user inputs (other than dimensions)
+    for i in rlist:    # i dimension name, dim_input = "all, int, or range"
+
+       # check dimension and go to appropriate option in text_options (e.g. lon == index[0])   
+       dim_index = 0 if i=='lon' \
+          else (1 if i=='lat' else (3 if i=='time' else (2 if i=='lev' else 4)))
+
+       # grab user input for each extra dimension
+       user_input = lon_input if i=='lon' \
+          else (lat_input if i=='lat' else (areo_input if i=='time' else (lev_input if i=='lev' else tod_input)))
+
+       if user_input == 'ALL':
+          text += [text_options[dim_index][0]]
+          nval_options[f"{i}_value"]="All"
+
+       elif "," in user_input:   # range of values selected
+          dim_split = str(user_input).split(",")
+          if i == 'time':
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]]
+             nval_options[f"{i}_value"] = str(nearest_value1%360)+'-'+str(nearest_value2%360) + unit_options[dim_index]
+          else:
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value1=f[i].sel(**{i:dim_split[0]},method='nearest').values
+                nearest_value2=f[i].sel(**{i:dim_split[1]},method='nearest').values
+
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]]
+             nval_options[f"{i}_value"] = str(nearest_value1)+'-'+str(nearest_value2) + unit_options[dim_index]
+       else: # single value selected
+          # check for unit
+          if i == 'lev':
+             unit = 'Pa' if vcords_input == 'pstd' else 'm'
+             dim = vcords_input
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[dim].sel(**{dim:user_input},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit]
+             nval_options[f"{i}_value"] = text_options[dim_index][1]+str(nearest_value) + unit
+          elif i == 'time':
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value%360) + unit_options[dim_index]]
+             nval_options[f"{i}_value"] = str(nearest_value%360) + unit_options[dim_index]
+          else:
+             with xr.open_dataset(f_path,decode_times=False) as f:
+                nearest_value=f[i].sel(**{i:user_input},method='nearest').values
+             text += ['@ ' + text_options[dim_index][1]+str(nearest_value) + unit_options[dim_index]]
+             nval_options[f"{i}_value"] = str(nearest_value) + unit_options[dim_index]
+
+    # order options (average first, if more than one average combine)
+    #e.g. Global Diurnal Average @ X Pa
+    text = sorted(text, key=lambda x: 'Average' in x, reverse=True)
+
+    # Join the strings into a single text string
+    text = ' '.join(text)
+
+    # If both "Meridional Average" and "Zonal Average" appear, replace with "Global"
+    if "Meridional Average" and "Zonal Average" in text:
+       text = text.replace('Meridional Average ','')
+       text = text.replace('Zonal Average','Global')
+
+    # If the word "Average" appears more than once, remove the first instance
+    num_averages = text.count("Average")  # Count the number of occurrences of "Average"
+    if num_averages > 1:
+       last_average_index = text.rindex("Average")  # Find the index of the last occurrence of "Average"
+       text = text.replace("Average", "", num_averages - 1)  # Replace all but the last occurrence of "Average"
+    
+    # If "@" appears more than once, remove the all but the first insttance
+    if text.count('@') > 1:
+       parts = text.split('@', 1)  # split the string at the first "@" character
+       text = parts[0]+'@' + parts[1].replace('@', '')  # join the parts back together, keeping only the first "@"
+    
+    plot_title = text
+    plot_title_lower = plot_title.lower()
+  
+    final_txt = f'''This plot was generated using data from the NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}. The full data is archived on the NASA Planetary Science (?) Data Portal and can be accessed and downloaded at the following link.
+
+The model scenario has {simulation["spatial_resolution"]} degree lat/lon resolution with {simulation["vertical_resolution"]} vertical layers on a {simulation["vertical_grid"]}, and includes {simulation["dust_scenario"]}. {simulation["water_scenario"]}. {simulation["aerosol_scenario"]}. {simulation["rt_scenario"]}.
+
+{time_averaging}. {vertical_interpolation}. A full description of the model configuration and details of the physics can be found in Kahre+2023 and the NASA Ames FV3 User Manual (link).
+
+The plot/dataset shows the {plot_title_lower} based on the following user inputs. Values listed represent the closest value in the model output. For example, if the user specified the latitude range 30S,30N, the plot will use model data between {nearest_value1}S and {nearest_value2}N. 
+
+Simulation Name: NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}
+Variable(s): {var_value}
+Latitude: {nval_options["lat_value"]}
+Longitude: {nval_options["lon_value"]}
+Atmospheric Level: {nval_options["lev_value"]}
+Solar Longitude (Ls): {nval_options["time_value"]}
+Local Time: {nval_options["time_of_day_12_value"]}
+File Name: {f_path}'''
+
+ 
+    return html.Pre(final_txt, className='pre-style'), plot_title
+
 

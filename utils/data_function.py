@@ -32,9 +32,9 @@ def var_data():
 
         'rdims':[['time','time_of_day_12'],['lon','time_of_day_12'],['lat','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lat','time'],['lon','lat','time'],
                 ['time','time_of_day_12'],['lon','time_of_day_12'],['lat','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lat','time'],['lon','lat','time'],
-                ['lev','lev2','lev3','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','lev2','lev3','time_of_day_12'],['lat','lev','lev2','lev3','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','lev2','lev3','time_of_day_12'],['lon','lev','lev2','lev3','time','time_of_day_12'],['lat','lev','lev2','lev3','time','time_of_day_12'],['lon','lat','time','time_of_day_12'],
-                ['lev','lev2','lev3','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','lev2','lev3','time_of_day_12'],['lat','lev','lev2','lev3','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','lev2','lev3','time_of_day_12'],['lon','lev','lev2','lev3','time','time_of_day_12'],['lat','lev','lev2','lev3','time','time_of_day_12'],['lon','lat','time','time_of_day_12'],
-                ['lev','lev2','lev3','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','lev2','lev3','time_of_day_12'],['lat','lev','lev2','lev3','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','lev2','lev3','time_of_day_12'],['lon','lev','lev2','lev3','time','time_of_day_12'],['lat','lev','lev2','lev3','time','time_of_day_12'],['lon','lat','time','time_of_day_12']],
+                ['lev','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','time_of_day_12'],['lat','lev','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','time_of_day_12'],['lon','lev','time','time_of_day_12'],['lat','lev','time','time_of_day_12'],['lon','lat','time','time_of_day_12'],
+                ['lev','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','time_of_day_12'],['lat','lev','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','time_of_day_12'],['lon','lev','time','time_of_day_12'],['lat','lev','time','time_of_day_12'],['lon','lat','time','time_of_day_12'],
+                ['lev','time','time_of_day_12'],['lon','time','time_of_day_12'],['lat','time','time_of_day_12'],['lon','lev','time_of_day_12'],['lat','lev','time_of_day_12'],['lon','lat','time_of_day_12'],['lon','lat','lev','time_of_day_12'],['lon','lev','time','time_of_day_12'],['lat','lev','time','time_of_day_12'],['lon','lat','time','time_of_day_12']],
 
         'dimx':['lon','time','time','time','lat','lon','time_of_day_12','time_of_day_12',
                 'lon','time','time','time','lat','lon','time_of_day_12','time_of_day_12',
@@ -92,4 +92,23 @@ def variable_list():
                     ['temp','ucomp','vcomp']]
    return variable_list
 
-
+def file_options():
+   # Dictioray of Text Options for different file types
+   file_options = {
+        "sim1": {
+           "name": "Data Release 1, (c) Kahre+2023 (link)",
+           "spatial_resolution": "2x2",
+           "vertical_resolution": "56",
+           "vertical_grid":"sigma hybrid pressure grid",
+           "dust_scenario":"a prescribed background dust climatology (citation)",
+           "water_scenario":"The model is dry",
+           "aerosol_scenario":"Description of tracers",
+           "rt_scenario": "Description of RT",
+        },
+        "atmos_ave": "Model results are averaged over 5 sols.",
+        "atmos_diurn": " Model results are averaged over 5 sols in 1 hour increments.",
+        "atmos_daily": "No temporal averaging is performed on model output.",
+        "pstd": "Vertical interpolation to a 48 level pressure grid was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
+        "zagl": "Vertical interpolation to a X level altitude grid [m] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
+        "zstd": "Vertical interpolation to a X level altitude grid [m] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing."}
+   return file_options

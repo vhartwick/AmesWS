@@ -16,7 +16,7 @@ def Footer():
                dbc.Button("Additional Plot Information", id="btn-modal",
                   n_clicks=0,style=BUTTON_STYLE,className="d-grid gap-2"),
                dbc.Modal([
-                  dbc.ModalHeader(dbc.ModalTitle("Header")),
+                  dbc.ModalHeader(dbc.ModalTitle("Information about Model Configuration and User Inputs used to generate this plot")),
                   dbc.ModalBody([
                      html.Div(id="modal-txt")
                   ]),
