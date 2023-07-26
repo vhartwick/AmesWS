@@ -549,8 +549,12 @@ def user_input_text(plot_input,model_input,var1_input,var2_input,var3_input,vcor
        plot_description = lowercased_string.replace('###', match, 1)
 
     # GENERATE TEXT FOR POP-UP/README
+    # save the file name and simulation directory
     last_slash_index = f_path.rfind('/')
-    file_name = f_path[last_slash_index + 1:]
+    # Find the index of the second-to-last slash using the previously found index
+    second_last_slash_index = f_path.rfind('/', 0, last_slash_index)
+    # Get the file name from the second-to-last slash to the end of the string
+    file_name = f_path[second_last_slash_index + 1:]
   
     final_txt = f'''This plot was generated using data from the NASA Ames FV3 Mars Global Climate Model, {simulation["name"]}. The full data is archived on the NASA Planetary Science (?) Data Portal and can be accessed and downloaded at the link below.
 

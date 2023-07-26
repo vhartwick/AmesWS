@@ -84,19 +84,19 @@ def file_options():
    # Dictioray of Text Options for different file types
    file_options = {
         "sim1": {
-           "name": "Data Release 1 (c) Kahre+2023",
+           "name": "Data Release 1 (Kahre+2023)",
            "spatial_resolution": "2x2",
            "vertical_resolution": "56",
-           "vertical_grid":"sigma hybrid pressure grid",
-           "dust_scenario":"a prescribed background dust climatology (citation)",
+           "vertical_grid":"hybrid sigma pressure grid",
+           "dust_scenario":"a prescribed background dust climatology",
            "water_scenario":"The model is dry",
            "aerosol_scenario":"Description of tracers",
            "rt_scenario": "Description of RT",
         },
         "atmos_ave": "Model results are averaged over 5 sols",
-        "atmos_diurn": " Model results are averaged over 5 sols and discretized into 2 hour increments",
+        "atmos_diurn": "Model results are averaged over 5 sols and discretized into 2 hour increments",
         "atmos_daily": "No temporal averaging is performed on model output",
-        "pstd": 'Vertical interpolation to a 44 level pressure grid [1000-0.00001Pa] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing',
-        "zagl": "Vertical interpolation to a 42 level altitude grid [0-13km] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
-        "zstd": "Vertical interpolation to a 48 level altitude grid [-7.5-13km] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing."}
+        "pstd": 'Vertical interpolation to a 36 level pressure grid [1000-0.01Pa] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing',
+        "zagl": "Vertical interpolation to a 34 level altitude grid [0-11km] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing.",
+        "zstd": "Vertical interpolation to a 45 level altitude grid [-7-100km] was performed using the Community Analysis Pipeline. See the CAP github for a complete description of vertical processing."}
    return file_options
