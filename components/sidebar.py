@@ -134,7 +134,6 @@ def Sidebar():
            ],start_collapsed=True, id="plotting-accordian",className="my-accordion"),
        ]),
 
-       dcc.Location(id='url',pathname='/',refresh=True),
    ],className="sidebar_vlh") # close html div
 
     

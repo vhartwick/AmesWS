@@ -129,8 +129,6 @@
    background-color:#252930;
    z-index:1;
 }
-
-
   
 .vertical_profile {
    position: absolute;
@@ -145,4 +143,14 @@
    #background-color:#252930;
    z-index:2;
    #visibility: hidden;
+}
+
+.card_links {
+   position: fixed;
+   top: 30vh;
+   left:50px;
+   right:50px;
+   bottom: 10vh;
+   color:black;
+   overflow-y:scroll;
 } 
