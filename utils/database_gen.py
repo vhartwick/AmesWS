@@ -29,7 +29,7 @@ def main():
 
    # Argument Parser Setup
    parser = argparse.ArgumentParser(description='Add or remove variables from data_var dictionary in data_function.py\ndata_var is the main dictionary driver for the webserver and specifies the variables that can be accessed with each plot type and additional basic information, including the dimensions, variable name & unit, etc.\n',formatter_class=argparse.RawTextHelpFormatter)
-   parser.add_argument("-r", "--remove",metavar="variable_name", help="Remove variable from data_var in data_function.py\n"
+   parser.add_argument("-r", "--remove",metavar="variable_name", nargs='+',help="Remove variable from data_var in data_function.py\n"
         "> USAGE: python database_gen.py -r ts\n") 
    parser.add_argument("-a", "--add", metavar="variable_name", help="Add variable from data_var in data_function.py\n"
         "> USAGE: python database_gen.py -a ts\n")           
@@ -46,16 +46,14 @@ def main():
 # function to remove variable
 def function_r(remove_var):
  
-   # User Input
-   #remove_var = input("What is the name (in FV3) of the variable you want to remove (e.g. ts): ")
+   new_dict = d
+   for var_name in remove_var:
+      # Find the index positions of 'ts' in the 'variable' key
+      indices_to_remove = [i for i, x in enumerate(new_dict['variable']) if x == var_name]
 
-   # Find the index positions of 'ts' in the 'variable' key
-   indices_to_remove = [i for i, x in enumerate(d['variable']) if x == remove_var]
-
-   # Create a new dictionary without 'ts' and its associated values in other keys
-   new_dict = {}
-   for key, values in d.items():
-      new_dict[key] = [value for i, value in enumerate(values) if i not in indices_to_remove]
+      # Create a new dictionary without 'ts' and its associated values in other keys
+      for key, values in d.items():
+         new_dict[key] = [value for i, value in enumerate(values) if i not in indices_to_remove]
 
    # Replace var_data dictionary with new dictionary & save old version
    
