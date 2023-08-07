@@ -28,24 +28,26 @@ d = d.to_dict(orient='list')
 def main():
 
    # Argument Parser Setup
-   parser = argparse.ArgumentParser(description='Add or remove variables from database')
-   parser.add_argument("-r", "--remove", action="store_true", help="remove variable from database")
-   parser.add_argument("-a", "--add", action="store_true", help="add variable to database")
+   parser = argparse.ArgumentParser(description='Add or remove variables from data_var dictionary in data_function.py\ndata_var is the main dictionary driver for the webserver and specifies the variables that can be accessed with each plot type and additional basic information, including the dimensions, variable name & unit, etc.\n',formatter_class=argparse.RawTextHelpFormatter)
+   parser.add_argument("-r", "--remove",metavar="variable_name", help="Remove variable from data_var in data_function.py\n"
+        "> USAGE: python database_gen.py -r ts\n") 
+   parser.add_argument("-a", "--add", metavar="variable_name", help="Add variable from data_var in data_function.py\n"
+        "> USAGE: python database_gen.py -a ts\n")           
     
    args = parser.parse_args()
 
    if args.remove:
-      function_r()
+      function_r(args.remove)
    elif args.add:
-      function_a()
+      function_a(args.add)
    else:
       print("No function specified")
 
 # function to remove variable
-def function_r():
+def function_r(remove_var):
  
    # User Input
-   remove_var = input("What is the name (in FV3) of the variable you want to remove (e.g. ts): ")
+   #remove_var = input("What is the name (in FV3) of the variable you want to remove (e.g. ts): ")
 
    # Find the index positions of 'ts' in the 'variable' key
    indices_to_remove = [i for i, x in enumerate(d['variable']) if x == remove_var]
@@ -81,10 +83,10 @@ def function_r():
 
 
 # function to add variable
-def function_a():
+def function_a(variable_name):
 
    # User Inputs
-   variable_name = input("What is the name (in FV3) of the new variable (e.g. ts): ")
+   #variable_name = input("What is the name (in FV3) of the new variable (e.g. ts): ")
 
 
    # First Check if Variable Is Already in Dictionary
