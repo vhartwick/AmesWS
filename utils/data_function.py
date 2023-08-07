@@ -4,68 +4,7 @@ import numpy as np
 import plotly.express as px
 
 def var_data():
-
-   # define datafram for variable options based on variable (e.g. 'Ts' can't do 2D lat/altitude
-   d = {'variable':['ts','ts','ts','ts','ts','ts','ts','ts',
-                   'ps','ps','ps','ps','ps','ps','ps','ps',
-                   'temp','temp','temp','temp','temp','temp','temp','temp','temp','temp',
-                   'ucomp','ucomp','ucomp','ucomp','ucomp','ucomp','ucomp','ucomp','ucomp','ucomp',
-                   'vcomp','vcomp','vcomp','vcomp','vcomp','vcomp','vcomp','vcomp','vcomp','vcomp'],
-
-        'unit': ['[K]','[K]','[K]','[K]','[K]','[K]','[K]','[K]',
-                 '[Pa]','[Pa]','[Pa]','[Pa]','[Pa]','[Pa]','[Pa]','[Pa]',
-                 '[K]','[K]','[K]','[K]','[K]','[K]','[K]','[K]','[K]','[K]',
-                 '[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]',
-                 '[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]','[m/s]'],
- 
-        'plot-type': ['2D_lon_lat','2D_time_lat','2D_time_lon','1D_time','1D_lat','1D_lon','1D_diurn','1D_daily',
-                      '2D_lon_lat','2D_time_lat','2D_time_lon','1D_time','1D_lat','1D_lon','1D_diurn','1D_daily',
-                      '2D_lon_lat','2D_lat_lev','2D_lon_lev','2D_time_lat','2D_time_lon','2D_time_lev','1D_time','1D_lat','1D_lon','1D_lev',
-                      '2D_lon_lat','2D_lat_lev','2D_lon_lev','2D_time_lat','2D_time_lon','2D_time_lev','1D_time','1D_lat','1D_lon','1D_lev',
-                      '2D_lon_lat','2D_lat_lev','2D_lon_lev','2D_time_lat','2D_time_lon','2D_time_lev','1D_time','1D_lat','1D_lon','1D_lev'],
-
-        'label':['Surface Temperature [K]','Surface Temperature [K]','Surface Temperature [K]','Surface Temperature [K]','Surface Temperature [K]','Surface Temperature [K]','Surface Temperature [K]','Surface Temperature [K]',
-                 'Surface Pressure [Pa]','Surface Pressure [Pa]','Surface Pressure [Pa]','Surface Pressure [Pa]','Surface Pressure [Pa]','Surface Pressure [Pa]','Surface Pressure [Pa]','Surface Pressure [Pa]',
-                 'Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]','Temperature [K]',
-                 'Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]','Zonal Wind [m/s]',
-                 'Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]','Meridional Wind [m/s]'],
-
-        'dimx':['lon','time','time','time','lat','lon','time_of_day_12','time_of_day_12',
-                'lon','time','time','time','lat','lon','time_of_day_12','time_of_day_12',
-                'lon','lat','lon','time','time','time','time','lat','lon','lev',
-                'lon','lat','lon','time','time','time','time','lat','lon','lev',
-                'lon','lat','lon','time','time','time','time','lat','lon','lev'],
-           
-        'dimy':['lat','lat','lon','NaN','NaN','NaN','NaN','NaN',
-                'lat','lat','lon','NaN','NaN','NaN','NaN','NaN',
-                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','NaN',
-                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','NaN',
-                'lat','lev','lev','lat','lon','lev','NaN','NaN','NaN','NaN'],
-
-        'xaxis_name':['Longitude','Ls','Ls','Ls','Latitude','Longitude','Local Time','Local Time',
-                      'Longitude','Ls','Ls','Ls','Latitude','Longitude','Local Time','Local Time',
-                      'Longitude','Latitude','Longitude','Ls','Ls','Ls','Ls','Latitude','Longitude','Pressure',
-                      'Longitude','Latitude','Longitude','Ls','Ls','Ls','Ls','Latitude','Longitude','Pressure',
-                      'Longitude','Latitude','Longitude','Ls','Ls','Ls','Ls','Latitude','Longitude','Pressure'],
-
-        'yaxis_name':['Latitude','Latitude','Longitude','NaN','NaN','NaN','NaN','NaN',
-                      'Latitude','Latitude','Longitude','NaN','NaN','NaN','NaN','Nan',
-                      'Latitude','Pressure','Pressure','Latitude','Longitude','Pressure','NaN','NaN','NaN','NaN',
-                      'Latitude','Pressure','Pressure','Latitude','Longitude','Pressure','NaN','NaN','NaN','NaN',
-                      'Latitude','Pressure','Pressure','Latitude','Longitude','Pressure','NaN','NaN','NaN','NaN'],
-
-        'hover2': [['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],
-                  ['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],
-                  ['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],['lev','temp'],
-                  ['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],['lev','ucomp'],
-                  ['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp'],['lev','vcomp']],   
-
-        'cmap': ['Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel',
-                 'Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel',
-                 'Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel','Oryel',
-                 'RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r',
-                 'RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r','RdBu_r',],
-        }
+   d = {'variable': ['ps', 'ps', 'ps', 'ps', 'ps', 'ps', 'ps', 'ps', 'temp', 'temp', 'temp', 'temp', 'temp', 'temp', 'temp', 'temp', 'temp', 'temp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'ucomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'vcomp', 'ts', 'ts', 'ts', 'ts', 'ts', 'ts', 'ts', 'ts'], 'unit': ['[Pa]', '[Pa]', '[Pa]', '[Pa]', '[Pa]', '[Pa]', '[Pa]', '[Pa]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[m/s]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]', '[K]'], 'plot-type': ['2D_lon_lat', '2D_time_lat', '2D_time_lon', '1D_time', '1D_lat', '1D_lon', '1D_diurn', '1D_daily', '2D_lon_lat', '2D_lat_lev', '2D_lon_lev', '2D_time_lat', '2D_time_lon', '2D_time_lev', '1D_time', '1D_lat', '1D_lon', '1D_lev', '2D_lon_lat', '2D_lat_lev', '2D_lon_lev', '2D_time_lat', '2D_time_lon', '2D_time_lev', '1D_time', '1D_lat', '1D_lon', '1D_lev', '2D_lon_lat', '2D_lat_lev', '2D_lon_lev', '2D_time_lat', '2D_time_lon', '2D_time_lev', '1D_time', '1D_lat', '1D_lon', '1D_lev', '2D_lon_lat', '2D_time_lat', '2D_time_lon', '1D_time', '1D_lat', '1D_lon', '1D_diurn', '1D_daily'], 'label': ['Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Surface Pressure [Pa]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Temperature [K]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Zonal Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Meridional Wind [m/s]', 'Surface Temperature [K]', 'Surface Temperature [K]', 'Surface Temperature [K]', 'Surface Temperature [K]', 'Surface Temperature [K]', 'Surface Temperature [K]', 'Surface Temperature [K]', 'Surface Temperature [K]'], 'dimx': ['lon', 'time', 'time', 'time', 'lat', 'lon', 'time_of_day_12', 'time_of_day_12', 'lon', 'lat', 'lon', 'time', 'time', 'time', 'time', 'lat', 'lon', 'lev', 'lon', 'lat', 'lon', 'time', 'time', 'time', 'time', 'lat', 'lon', 'lev', 'lon', 'lat', 'lon', 'time', 'time', 'time', 'time', 'lat', 'lon', 'lev', 'lon', 'time', 'time', 'time', 'lat', 'lon', 'time_of_day_12', 'time'], 'dimy': ['lat', 'lat', 'lon', 'NaN', 'NaN', 'NaN', 'NaN', 'NaN', 'lat', 'lev', 'lev', 'lat', 'lon', 'lev', 'NaN', 'NaN', 'NaN', 'NaN', 'lat', 'lev', 'lev', 'lat', 'lon', 'lev', 'NaN', 'NaN', 'NaN', 'NaN', 'lat', 'lev', 'lev', 'lat', 'lon', 'lev', 'NaN', 'NaN', 'NaN', 'NaN', 'lat', 'lat', 'lon', 'NaN', 'NaN', 'NaN', 'NaN', 'NaN'], 'xaxis_name': ['Longitude', 'Ls', 'Ls', 'Ls', 'Latitude', 'Longitude', 'Local Time', 'Local Time', 'Longitude', 'Latitude', 'Longitude', 'Ls', 'Ls', 'Ls', 'Ls', 'Latitude', 'Longitude', 'Pressure', 'Longitude', 'Latitude', 'Longitude', 'Ls', 'Ls', 'Ls', 'Ls', 'Latitude', 'Longitude', 'Pressure', 'Longitude', 'Latitude', 'Longitude', 'Ls', 'Ls', 'Ls', 'Ls', 'Latitude', 'Longitude', 'Pressure', 'Longitude', 'Ls', 'Ls', 'Ls', 'Latitude', 'Longitude', 'Local Time', 'Ls'], 'yaxis_name': ['Latitude', 'Latitude', 'Longitude', 'NaN', 'NaN', 'NaN', 'NaN', 'Nan', 'Latitude', 'Pressure', 'Pressure', 'Latitude', 'Longitude', 'Pressure', 'NaN', 'NaN', 'NaN', 'NaN', 'Latitude', 'Pressure', 'Pressure', 'Latitude', 'Longitude', 'Pressure', 'NaN', 'NaN', 'NaN', 'NaN', 'Latitude', 'Pressure', 'Pressure', 'Latitude', 'Longitude', 'Pressure', 'NaN', 'NaN', 'NaN', 'NaN', 'Latitude', 'Latitude', 'Longitude', 'NaN', 'NaN', 'NaN', 'NaN', 'NaN'], 'hover2': [['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'ucomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'vcomp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp'], ['lev', 'temp']], 'cmap': ['Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel', 'Oryel']}
    df = pd.DataFrame(data=d)
    return df
 
