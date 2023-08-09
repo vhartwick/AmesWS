@@ -23,7 +23,8 @@ def Header():
                      dbc.NavbarSimple([
 
                               dbc.NavItem(dbc.NavLink("Web Interface", href="/interface", style={"color":"white"})),
-                              dbc.NavItem(dbc.NavLink("Contact Us", href="mailto:victoria.hartwick@nasa.gov", style={"color":"white"})),
+                              dbc.NavItem(dbc.NavLink("Contact Us", href="https://forms.gle/WeceW2noinHnRxyDA",style={"color":"white"})),
+                              #dbc.NavItem(dbc.NavLink("Contact Us", href="mailto:victoria.hartwick@nasa.gov", style={"color":"white"})),
                               #dbc.NavItem(dbc.NavLink("Model Description", href="/model", style={"color":"white"})),
                               #dbc.NavItem(dbc.NavLink("How to Cite", href="/citation", style={"color":"white"})),
                            ], color="#25293"),
