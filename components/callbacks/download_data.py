@@ -37,11 +37,12 @@ dv = df.var_data()
     State("var2-sav", "data"),
     State("var3-sav", "data"),
     State("output-format-checklist", "value"),
-    State("fig-title","children")],
+    State("fig-title","children"),
+    State("modal-txt", "children")],
     prevent_initial_call = True,
 )
 
-def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,dim1_input,dim2_input,var1_input,var2_input,var3_input,output_format_input,fig_title_input):
+def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo_input,lat_input,lon_input,lev_input,tod_input,dim1_input,dim2_input,var1_input,var2_input,var3_input,output_format_input,fig_title_input, modal_txt):
  
    # Execute on Button Click
    if btn_clicks != None:
@@ -84,18 +85,9 @@ def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo
       except (ValueError, KeyError, TypeError):
          print('temporary print statemnent until I figure out how to exit try statement')
 
-      # Tell the file where to go
-      t = Path.cwd().joinpath("downloads")
-      if not t.is_dir(): t.mkdir()
-
-
       # CSV 
       if output_format_input[0] == "csv" or (len(output_format_input) > 1 and output_format_input[1] == "csv") or (len(output_format_input) > 2 and output_format_input[2] == "csv"):
        
-         # Tell the file where to go
-         t = Path.cwd().joinpath("downloads/data")
-         if not t.is_dir(): t.mkdir()
- 
          # Zoom
          if var1_zoom is not None:
             var1_zoom =var1_zoom.to_dataframe()
@@ -110,16 +102,16 @@ def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo
 
             # Return the CSV file for the variables that exist
             if var2_input and var3_input:
-               tnc = (var1.name+ "_" + var2.name+"_"+ var3.name + "_"+plot_input+"_zoom.csv")
+               tnc = f"{var1.name}_{var2.name}_{var3.name}_{plot_input}_zoom.csv"
                ds = pd.concat([var1_zoom, var2_zoom, var3_zoom], axis=1, ignore_index=True)
-               return dcc.send_data_frame(ds.to_csv, filename=tnc)
+               return (dcc.send_data_frame(ds.to_csv, filename=tnc))
             elif var2_input:
-               tnc = (var1.name+ "_" + var2.name+"_"+plot_input+"_zoom.csv")
+               tnc = f"{var1.name}_{var2.name}_{plot_input}_zoom.csv"
                ds = pd.concat([var1_zoom, var2_zoom], axis=1)
-               return dcc.send_data_frame(ds.to_csv, filename=tnc)             
+               return (dcc.send_data_frame(ds.to_csv, filename=tnc))             
             else:
-               tnc = (var1.name+ "_"+plot_input+"_zoom.csv")
-               return dcc.send_data_frame(var1_zoom.to_csv, filename=tnc)
+               tnc = f"{var1.name}{plot_input}_zoom.csv"
+               return (dcc.send_data_frame(var1_zoom.to_csv, filename=tnc))
 
          else:
             var1 =var1.to_dataframe()
@@ -135,69 +127,64 @@ def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo
 
             # Send to CSV
             if var2_input and var3_input:
-               tnc = (var1.name+ "_" + var2.name+"_"+ var3.name +  "_" + plot_input+".csv")
-               tnc_surf= (plot_input+"_surf.csv")
+               tnc = f"{var1.name}_{var2.name}_{var3.name}_{plot_input}.csv"
                ds = pd.concat([var1, var2, var3], axis=1) #, keys=[var1.name,var2.name,var3.name])
-               return dcc.send_data_frame(ds.to_csv, filename=tnc)
+               return (dcc.send_data_frame(ds.to_csv, filename=tnc))
             
             elif var2_input:
-               tnc = (var1.name+ "_" + var2.name+"_"+plot_input+".csv")
+               tnc = f"{var1.name}_{var2.name}_{plot_input}.csv"
                ds = pd.concat([var1, var2], axis=1) #, keys=[var1.name,var2.name])
-               return dcc.send_data_frame(ds.to_csv, filename=tnc)
+               return (dcc.send_data_frame(ds.to_csv, filename=tnc))
 
             else:
-               tnc =(var1.name+ "_" + plot_input+".csv")
-               return dcc.send_data_frame(var1.to_csv, filename=tnc)
+               tnc =f"{var1.name}_{plot_input}.csv"
+               return (dcc.send_data_frame(var1.to_csv, filename=tnc))
 
 
       # NETCDF
       if output_format_input[0] == "ncdf" or (len(output_format_input) > 1 and output_format_input[1] == "ncdf"):
  
-         # Tell the file where to go
-         t = Path.cwd().joinpath("downloads/data")
-         if not t.is_dir(): t.mkdir()
-
          # Select Based on Zoom
          if var1_zoom is not None:
 
              # Three Variables Selected
              if var2_input and var3_input:
-                tnc =  t.joinpath(var1.name+"_"+var2.name+"_"+var3.name+"_"+plot_input+"_zoom.nc")
+                tnc =  f"{var1.name}_{var2.name}_{var3.name}_{plot_input}_zoom.nc"
                 var1_zoom.to_netcdf(tnc,mode='a')
                 var2_zoom.to_netcdf(tnc,mode='a')
                 var3_zoom.to_netcdf(tnc,mode='a')
 
              # Two Variables
              elif var2_input:             
-                 tnc = t.joinpath(var1.name+ "_" + var2.name+"_"+plot_input+"_zoom.nc")
+                 tnc = f"{var1.name}_{var2.name}_{plot_input}_zoom.nc"
                  var1_zoom.to_netcdf(tnc,mode='a')
                  var2_zoom.to_netcdf(tnc,mode='a')
        
              else:
-                 tnc = t.joinpath(var1.name+"_"+plot_input+"_zoom.nc")
+                 tnc = f"{var1.name}_{plot_input}_zoom.nc"
                  var1_zoom.to_netcdf(tnc)
   
          else:
 
              # Three Variables Selected
              if var2_input and var3_input:
-                tnc = t.joinpath(var1.name+"_"+var2.name+"_"+var3.name+"_"+plot_input+".nc")
+                tnc = f"{var1.name}_{var2.name}_{var3.name}_{plot_input}.nc"
                 var1.to_netcdf(tnc, mode='a')
                 var2.to_netcdf(tnc, mode='a')        
                 var3.to_netcdf(tnc, mode='a')
         
              # Two variables
              elif var2_input:
-                tnc = t.joinpath(var1.name+"_"+var2.name+"_"+plot_input+".nc")
+                tnc = f"{var1.name}_{var2.name}_{plot_input}.nc"
                 var1.to_netcdf(tnc, mode='a')
                 var2.to_netcdf(tnc, mode='a') 
            
              # One Variable Selected
              else:
-                tnc = t.joinpath(var1.name+"_"+plot_input+".nc")
+                tnc = f"{var1.name}_{plot_input}.nc"
                 var1.to_netcdf(tnc)
 
-         return dcc.send_file(tnc)
+         return (dcc.send_file(tnc))
 
       #PNG
       if output_format_input[0] == "png":
@@ -221,10 +208,16 @@ def download_data(btn_clicks,relayoutData,fig_input,plot_input,vcords_input,areo
                  color='black'))   
          )
 
-         filename="Saved_Figure.png"
-          # Tell the file where to go
-         t = Path.cwd().joinpath("downloads/images")
-         if not t.is_dir(): t.mkdir()
+         # Three Variables Selected
+         if var2_input and var3_input:
+            tnc = f"{var1.name}_{var2.name}_{var3.name}_{plot_input}.png"
+         # Two variables
+         elif var2_input:
+            tnc = f"{var1.name}_{var2.name}_{plot_input}.png"
+         # One Variable Selected
+         else:
+            tnc = f"{var1.name}_{plot_input}.png"
+            print(tnc)
 
-         t = t.joinpath(filename)
-         fig.write_image(t,format='png',engine='kaleido')
+         fig.write_image(tnc,format='png',engine='kaleido')
+         return(dcc.send_file(tnc))

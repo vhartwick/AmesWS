@@ -36,6 +36,7 @@ def Abar():
                  dbc.Button("Download Data", id="btn-download",
                     disabled=True,style=BUTTON_STYLE,className="d-grid gap-2"),
                  dcc.Download(id="download-fig"),
+                 dcc.Download(id="download-readme"),
              ]),
 
              dcc.Checklist(id="output-format-checklist",
@@ -90,10 +91,10 @@ def Abar():
                    html.Hr(),
                    html.P("Information about the Community Analysis Pipeline:"),
                    dbc.CardLink("CAP", href="https://github.com/NASA-Planetary-Science/AmesCAP",target="_blank"),
-                   html.Hr(),
-                   html.P("Model Configuration"),
-                   html.Hr(),
-                   html.P("How to Cite the Ames WS Name"),
+                   #html.Hr(),
+                   #html.P("Model Configuration"),
+                   #html.Hr(),
+                   #html.P("How to Cite the Ames WS Name"),
                    #dbc.Collapse(
                    #   dbc.Card("How to Cite the Ames OFFICIAL NAME OF WS",
                    #      dbc.CardBody(

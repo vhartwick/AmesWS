@@ -573,7 +573,7 @@ Atmospheric Level: {nval_options["lev_value"]}
 Solar Longitude (Ls): {nval_options["time_value"]}
 Local Time: {nval_options["time_of_day_12_value"]}
 File Name: {file_name}'''
-
+    
     return html.Pre(final_txt, className='pre-style'), plot_title
 
 

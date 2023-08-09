@@ -23,6 +23,7 @@ from components.callbacks import second_hover
 from components.callbacks import update_level_input
 from components.callbacks import update_latlon_input
 from components.callbacks import download_data
+from components.callbacks import download_readme
 from components.callbacks import update_plotting_options
 #from components.callbacks import update_modal_text
 #from components.callbacks import update_plot_title
