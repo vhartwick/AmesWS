@@ -35,7 +35,7 @@ Download Instructions:
 	vi utils/common_functions.py 
         **change all file paths in def file_path (right now you only need to worry about the one copied below)
 	if vcords_input == "pstd" : # load atmos_average_pstd
-       		f_path = f'/PATH/TO/DATA/amesWS/Data/{model_input}/02004.atmos_average_pstd.nc'
+       		f_path = f'/PATH/TO/DATA/amesWS/Data/{model_input}/02004.atmos_average_extract_pstd.nc'
 ```
 5. Run App
 ```  	
